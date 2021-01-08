@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: fb9161ad25dc2334cbc5ae9ae6f37406
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 94073015eacc34c1d8fc6786e43d60ca, type: 3}
+  baseLanguageID: 
+  stringIDs:
+  - Gumshoe-Gumshoe-0
+  - Gumshoe-Gumshoe-1
+  - Gumshoe-Gumshoe-2
+  - Gumshoe-Gumshoe-3
+  - Gumshoe-Gumshoe-4
+  - Gumshoe-Gumshoe-5
+  - Gumshoe-Gumshoe-6
+  - Gumshoe-Gumshoe-7
+  - Gumshoe-Gumshoe.Other-8
+  - Gumshoe-Gumshoe.Other-9
+  - Gumshoe-Gumshoe.Other-10
+  compilationStatus: 1
+  isSuccesfullyCompiled: 1
+  compilationErrorMessage: 
+  baseLanguage: {instanceID: 0}
+  localizations: []

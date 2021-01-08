@@ -1,0 +1,33 @@
+title: Start
+tags: 
+colorID: 0
+position: -160,-218
+---
+<<if visited("Gumshoe") is false>>
+    Gumshoe: Hello, Detective. Glad to see you.
+    Player:  Morning Constable Gumshoe. You as well.
+             Let's cut right to the chase. What have we got here?
+    Gumshoe: Nothing pretty, that's for sure.
+             Male John Doe, ca. 30 years old, sliced throat. 
+             Empty pockets, no wallet.
+    Gumshoe: Deputy Hotshot found the body. You should have met him on the way inside. 
+             Did you talk yet?
+    Player:  No, but I will be sure to catch up him.
+    Player:  So, fill me in on some details.
+    Gumshoe: As of now, we don't know when the murder took place.
+             Forensics just arrived here some minutes ago, same as me.
+             We waited for CSI to take a look a the crime scene as well.
+<<else>>
+    Player: Hello again, Constable.
+    Sally: Howdy.
+<<endif>>
+===
+title: Gumshoe.Other
+tags: 
+colorID: 0
+position: 149,-191
+---
+Player: So, what do you make of the crime scene, Constable?
+Gumshoe: If you ask me, this is as straight a robbery as they come.
+Gumshoe: No mysteries here, sir.
+===

@@ -1,15 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Yarn.Unity;
 
 public class NPCController : MonoBehaviour
 {
-    Color _stored;
+    [Header("Optional")]
+    public YarnProgram scriptToLoad;
+
+    public string characterName = "";
+    public string talkToNode = "";
+    
+    private Color _stored;
+
+    private DialogueRunner _dialogRunner;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _dialogRunner = FindObjectOfType<DialogueRunner>();
+
+        if (scriptToLoad != null) {
+            DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
+            dialogueRunner.Add(scriptToLoad);                
+        }
     }
 
     // Update is called once per frame
@@ -19,32 +34,59 @@ public class NPCController : MonoBehaviour
     }
 
     void OnMouseDown() {
-        Debug.Log("Clicked");
+        // Don't trigger when in dialog control when we're in dialogue
+        if (_dialogRunner.IsDialogueRunning == true) {
+            return;
+        }
+
+        try {
+            // Kick off the dialogue at this node.
+            _dialogRunner.StartDialogue (talkToNode);
+            SetHighlighted(false);
+        } catch( Exception e ) {
+            Debug.LogWarningFormat("Could not start dialogue on node {0}", talkToNode);
+        }
+    }
+
+    void SetHighlighted(Boolean highlighted) {
+        if(highlighted) {
+            try {
+                Material m = GetComponent<MeshRenderer>()?.material;
+                _stored = m.color;
+                m.color = new Color(1.0f, 0f, 0f);
+            } catch( MissingComponentException e ) {}
+
+            try {
+                GameObject outline = transform.Find("Outline").gameObject;
+                outline.SetActive(true);
+            } catch( NullReferenceException e ) {}
+        }
+        else {
+            try {
+            Material m = GetComponent<MeshRenderer>()?.material;
+            m.color = _stored;
+            } catch(MissingComponentException e) {}
+
+            try {
+                GameObject outline = transform.Find("Outline").gameObject;
+                outline.SetActive(false);
+            } catch(NullReferenceException e) {}
+        }
     }
 
     void OnMouseEnter() {
-        try {
-            Material m = GetComponent<MeshRenderer>()?.material;
-            _stored = m.color;
-            m.color = new Color(1.0f, 0f, 0f);
-        } catch(MissingComponentException e) {}
+        if (_dialogRunner.IsDialogueRunning == true) {
+            return;
+        }
 
-        try {
-            SpriteRenderer s = GetComponent<SpriteRenderer>();
-            _stored = s.color;
-            s.color = new Color(1.0f, 0f, 0f);
-        } catch(MissingComponentException e) {}
+        SetHighlighted(true);
     }
 
     void OnMouseExit() {
-        try {
-            Material m = GetComponent<MeshRenderer>()?.material;
-            m.color = _stored;
-        } catch(MissingComponentException e) {}
+        if (_dialogRunner.IsDialogueRunning == true) {
+            return;
+        }
 
-        try {
-            SpriteRenderer s = GetComponent<SpriteRenderer>();
-            s.color = _stored;
-        } catch(MissingComponentException e) {}
+        SetHighlighted(false);
     }
 }

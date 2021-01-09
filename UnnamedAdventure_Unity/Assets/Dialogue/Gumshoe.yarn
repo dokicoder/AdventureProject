@@ -13,7 +13,8 @@ position: -160,-218
     Gumshoe: Deputy Hotshot found the body. You should have met him on the way inside. 
              Did you talk yet?
     Player:  No, but I will be sure to catch up him.
-    Player:  So, fill me in on some details.
+        [[Fill me in on some details.|FillMein]]
+
     Gumshoe: As of now, we don't know when the murder took place.
              Forensics just arrived here some minutes ago, same as me.
              We waited for CSI to take a look a the crime scene as well.
@@ -21,13 +22,37 @@ position: -160,-218
     Player: Hello again, Constable.
     Sally: Howdy.
 <<endif>>
+[[Leave|GoodBye]]
 ===
-title: Gumshoe.Other
+title: FillMeIn
 tags: 
 colorID: 0
 position: 149,-191
 ---
-Player: So, what do you make of the crime scene, Constable?
-Gumshoe: If you ask me, this is as straight a robbery as they come.
-Gumshoe: No mysteries here, sir.
+Player: What should I ask the Constable?
+-> Crime Scene
+    Player: So, what do you make of the crime scene, Constable?
+    Gumshoe: If you ask me, this is as straight a robbery as they come.
+    Gumshoe: No mysteries here, sir.
+    [[FillMeIn]]
+-> Body
+    Player: White John Doe in his 30ies - that's about as vague a description as they come. 
+            Anything else strike your attention?
+    [[FillMeIn]]
+-> Leave
+    [[GoodBye]]
+===
+title: GoodBye
+tags: 
+colorID: 0
+position: 149,-191
+---
+    Player: Gotta go.
+<<if visited("GoodBye") is false>>
+    Player: Do me a favor and stick around a couple more minutes.
+            Just in case I have further questions.
+    Gumshoe: Sure thing, Detective. I have to wait here anyway.
+<<else>>   
+    Gumshoe: Alright. I'll be here.
+<<endif>>
 ===

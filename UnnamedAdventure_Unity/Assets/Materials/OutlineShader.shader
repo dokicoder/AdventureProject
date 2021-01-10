@@ -3,7 +3,8 @@
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Tint", Color) = (1,1,1,1)
+        _Color ("Color", Color) = (1,1,1,1)
+        _OutlineColor ("Color", Color) = (1,1,1,1)
         [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
         [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
         [HideInInspector] _Flip ("Flip", Vector) = (1,1,1,1)
@@ -32,6 +33,8 @@
         CGPROGRAM
             #include "UnitySprites.cginc"
 
+            fixed4 _OutlineColor;
+
             struct _v2f
             {
                 float4 vertex   : SV_POSITION;
@@ -43,7 +46,7 @@
             fixed4 OutlineFrag(_v2f IN) : SV_Target
             {
                 fixed4 c = SpriteFrag (IN);
-                c = fixed4(1.0, 1.0, 0.0, c.a);
+                c = fixed4(_OutlineColor.rgb, c.a);
                 c.rgb *= c.a;
                 return c;
             }

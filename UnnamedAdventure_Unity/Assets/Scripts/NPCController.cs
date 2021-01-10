@@ -43,9 +43,27 @@ public class NPCController : MonoBehaviour
             // Kick off the dialogue at this node.
             _dialogRunner.StartDialogue (talkToNode);
             SetHighlighted(false);
+            ShowName(false);
         } catch( Exception e ) {
             Debug.LogWarningFormat("Could not start dialogue on node {0}", talkToNode);
         }
+    }
+    void OnMouseEnter() {
+        if (_dialogRunner.IsDialogueRunning == true) {
+            return;
+        }
+
+        SetHighlighted(true);
+        ShowName(true);
+    }
+
+    void OnMouseExit() {
+        if (_dialogRunner.IsDialogueRunning == true) {
+            return;
+        }
+
+        SetHighlighted(false);
+        ShowName(false);
     }
 
     void SetHighlighted(Boolean highlighted) {
@@ -74,19 +92,10 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    void OnMouseEnter() {
-        if (_dialogRunner.IsDialogueRunning == true) {
-            return;
-        }
-
-        SetHighlighted(true);
-    }
-
-    void OnMouseExit() {
-        if (_dialogRunner.IsDialogueRunning == true) {
-            return;
-        }
-
-        SetHighlighted(false);
+    void ShowName(Boolean show) {
+        try {
+            GameObject nameCanvas = transform.Find("Name").gameObject;
+            nameCanvas.SetActive(show);
+        } catch( NullReferenceException e ) {}
     }
 }

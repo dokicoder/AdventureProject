@@ -33,9 +33,9 @@ public class UIUpdateAdapter : MonoBehaviour
                     TextText.color = Color.white;
                 }
                 try {
-                    var npcWithMatchingName = NPCs.Find(npc => npc.characterName == name);
-                    SpeakerText.color = npcWithMatchingName.characterColor;
-                    TextText.color = npcWithMatchingName.characterColor;
+                    var npcWithMatchingName = NPCs.Find(npc => npc.Name == name);
+                    SpeakerText.color = npcWithMatchingName.Color;
+                    TextText.color = npcWithMatchingName.Color;
                 } catch(Exception e) {}
         
                 onLineUpdate?.Invoke(lineComponents[1].TrimStart());

@@ -4,23 +4,23 @@ colorID: 0
 position: -160,-218
 ---
 <<if visited("Gumshoe") is false>>
-    Gumshoe: Hello, Detective. Glad to see you.
+    Gumshoe: Hello Detective. Glad to see you.
     Player:  Morning Constable Gumshoe. You as well.
              Let's cut right to the chase. What have we got here?
     Gumshoe: Nothing pretty, that's for sure.
              Male John Doe, ca. 30 years old, sliced throat. 
              Empty pockets, no wallet.
+             No signs of forced entry. It is likely the victim knew the culprit.
     Gumshoe: Deputy Hotshot found the body. You should have met him on the way inside. 
              Did you talk yet?
     Player:  No, but I will be sure to catch up him.
-        [[Fill me in on some details.|FillMein]]
-
     Gumshoe: As of now, we don't know when the murder took place.
              Forensics just arrived here some minutes ago, same as me.
              We waited for CSI to take a look a the crime scene as well.
+    [[Fill me in on some more details.|FillMeIn]]
 <<else>>
     Player: Hello again, Constable.
-    Sally: Howdy.
+    Gumshoe: Howdy.
 <<endif>>
 [[Leave|GoodBye]]
 ===
@@ -34,10 +34,22 @@ Player: What should I ask the Constable?
     Player: So, what do you make of the crime scene, Constable?
     Gumshoe: If you ask me, this is as straight a robbery as they come.
     Gumshoe: No mysteries here, sir.
+    Player: Is that so? Where is the murder weapon, then?
+    Gumshoe: Ok, you got me there. It has not turned up yet. 
     [[FillMeIn]]
 -> Body
-    Player: White John Doe in his 30ies - that's about as vague a description as they come. 
-            Anything else strike your attention?
+    Player:  Ok, first steps first. We have to figure out who the victim is.
+             White John Doe in his 30ies - that's about as vague a description as they come. 
+             Is the victim the tenant of this apartment?
+    Gumshoe: We don't know yet. This is clearly a single apartment.
+             In this part of the city, condos are rented out on handshake deals.
+             We did not get hold of the landlord yet.
+             But when we do, there's no guarantee he can tell us if the victim even lives here.
+             Your best bet is probably to talk to other residents.
+    Player:  Hm, I see. Good thinking. I will figure out the identity.
+    Player:  
+             Anything else strike your attention?
+
     [[FillMeIn]]
 -> Leave
     [[GoodBye]]

@@ -9,9 +9,9 @@ public class NPCController : MonoBehaviour
     [Header("Optional")]
     public YarnProgram scriptToLoad;
 
-    public Color characterColor;
+    public Color Color;
 
-    public string characterName = "";
+    public string Name = "";
     public string talkToNode = "";
     
     private Color _stored;
@@ -26,7 +26,7 @@ public class NPCController : MonoBehaviour
         outline.SetActive(false);
 
         Material outlineMaterial = new Material( Shader.Find("Sprites/OutlineShader") );
-        outlineMaterial.SetColor("_OutlineColor", characterColor);
+        outlineMaterial.SetColor("_OutlineColor", Color);
 
         const int num_outlines = 7;
         float angle = 0;
@@ -52,9 +52,13 @@ public class NPCController : MonoBehaviour
     {
         _dialogRunner = FindObjectOfType<DialogueRunner>();
         
-        CreateOutline();
+        // the NPC might have a mesh renderr - if it does, this is a 3D NPC and we don't need to bother creating the outline
+        try {
+            CreateOutline();
+            transform.Find("Name/Label").GetComponent<UnityEngine.UI.Text>().color = Color;
+        } catch( Exception e ) {}
 
-        transform.Find("Name/Label").GetComponent<UnityEngine.UI.Text>().color = characterColor;
+        
         ShowName(false);
 
         if (scriptToLoad != null) {
@@ -86,7 +90,7 @@ public class NPCController : MonoBehaviour
         }
     }
     void OnMouseEnter() {
-        if (_dialogRunner.IsDialogueRunning == true) {
+        if (_dialogRunner?.IsDialogueRunning == true) {
             return;
         }
 
@@ -95,7 +99,7 @@ public class NPCController : MonoBehaviour
     }
 
     void OnMouseExit() {
-        if (_dialogRunner.IsDialogueRunning == true) {
+        if (_dialogRunner?.IsDialogueRunning == true) {
             return;
         }
 
@@ -133,6 +137,6 @@ public class NPCController : MonoBehaviour
         try {
             GameObject nameCanvas = transform.Find("Name").gameObject;
             nameCanvas.SetActive(show);
-        } catch( NullReferenceException e ) {}
+        } catch( Exception e ) {}
     }
 }

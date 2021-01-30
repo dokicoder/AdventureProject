@@ -8,6 +8,8 @@ public class NPCController : MonoBehaviour
 {
     [Header("Optional")]
     public YarnProgram scriptToLoad;
+    // Custom top offset for the name label
+    public Vector3 TopOffset = new Vector3(0, 30, 0);
 
     public Color Color;
 
@@ -16,7 +18,8 @@ public class NPCController : MonoBehaviour
     
     private Color _stored;
 
-    private DialogueRunner _dialogRunner;
+    private DialogueRunner _dialogueRunner;
+    private GameObject _nameLabel;
 
     void CreateOutline() {
         GameObject outline = new GameObject("_Outline");
@@ -31,8 +34,6 @@ public class NPCController : MonoBehaviour
         const int num_outlines = 7;
         float angle = 0;
         for( int i = 0; i < num_outlines; ++i ) {
-
-
             GameObject outlinePart = new GameObject("_OutlinePart");
             outlinePart.AddComponent<RectTransform>();
             var spriteRenderer = outlinePart.AddComponent<SpriteRenderer>();
@@ -50,16 +51,14 @@ public class NPCController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _dialogRunner = FindObjectOfType<DialogueRunner>();
+        _nameLabel = GameObject.FindWithTag("NameLabel");
+        _dialogueRunner = FindObjectOfType<DialogueRunner>();
         
         // the NPC might have a mesh renderr - if it does, this is a 3D NPC and we don't need to bother creating the outline
         try {
             CreateOutline();
-            transform.Find("Name/Label").GetComponent<UnityEngine.UI.Text>().color = Color;
+            GameObject.FindWithTag("NameLabel").GetComponent<UnityEngine.UI.Text>().color = Color;
         } catch( Exception e ) {}
-
-        
-        ShowName(false);
 
         if (scriptToLoad != null) {
             DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
@@ -76,13 +75,13 @@ public class NPCController : MonoBehaviour
 
     void OnMouseDown() {
         // Don't trigger when in dialog control when we're in dialogue
-        if (_dialogRunner.IsDialogueRunning == true) {
+        if (_dialogueRunner.IsDialogueRunning == true) {
             return;
         }
 
         try {
             // Kick off the dialogue at this node.
-            _dialogRunner.StartDialogue (talkToNode);
+            _dialogueRunner.StartDialogue (talkToNode);
             SetHighlighted(false);
             ShowName(false);
         } catch( Exception e ) {
@@ -90,7 +89,7 @@ public class NPCController : MonoBehaviour
         }
     }
     void OnMouseEnter() {
-        if (_dialogRunner?.IsDialogueRunning == true) {
+        if (_dialogueRunner?.IsDialogueRunning == true) {
             return;
         }
 
@@ -99,7 +98,7 @@ public class NPCController : MonoBehaviour
     }
 
     void OnMouseExit() {
-        if (_dialogRunner?.IsDialogueRunning == true) {
+        if (_dialogueRunner?.IsDialogueRunning == true) {
             return;
         }
 
@@ -134,9 +133,19 @@ public class NPCController : MonoBehaviour
     }
 
     void ShowName(Boolean show) {
-        try {
-            GameObject nameCanvas = transform.Find("Name").gameObject;
-            nameCanvas.SetActive(show);
-        } catch( Exception e ) {}
+        if(show) {
+            _nameLabel.SetActive(true);
+
+            // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
+            float halfSpriteHeight = GetComponent<SpriteRenderer>().sprite.bounds.size.y * transform.localScale.y * 0.5f;
+
+            Vector3 spriteTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfSpriteHeight, 0));
+            _nameLabel.GetComponent<RectTransform>().position = spriteTopScreenPosition + TopOffset;
+
+            _nameLabel.GetComponent<UnityEngine.UI.Text>().color = Color;
+            _nameLabel.GetComponent<UnityEngine.UI.Text>().text = Name;
+        } else {
+            _nameLabel.SetActive(false);
+        }
     }
 }

@@ -5,7 +5,8 @@
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
         _OutlineAmount ("Outline Amount", Range(0,1)) = 0.2
-        _OutlineColor ("OutLineColor", Color) = (0.3,0.7,0,1)
+        _OutlineColor ("OutlineColor", Color) = (0.3,0.7,0,1)
+        _Enabled ("Enabled", Int) = 0
     }
     SubShader {
         Tags { "Queue" = "Overlay" }
@@ -22,6 +23,7 @@
 
         float _OutlineAmount;
         fixed4 _OutlineColor;
+        int _Enabled;
 
         void vert (inout appdata_full v) {
             v.vertex.xyz += v.normal * _OutlineAmount;
@@ -29,6 +31,10 @@
         sampler2D _MainTex;
         void surf (Input IN, inout SurfaceOutput o) {
             o.Emission = _OutlineColor;
+
+            if(!_Enabled) {
+                discard;
+            }
         }
         ENDCG
 

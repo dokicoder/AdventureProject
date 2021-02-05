@@ -22,3 +22,5 @@ Tutourials:
 - refactor the name label positioning into another script or utils => learn how to do modular scripts that work together
 - sort points by urgency and make a date for it so you do it constantly and not have to read through 200 notes
 - add name and descriptions to items (objects) and so on
+- It should probably be possible to hack the outline of sprites with The SDF shader of TextMeshPro
+- Make a writeup on how TMPJuicer works. And how you integrated it with the UI Update adapter to reset the text and re-initialize the transforms and animation (remember the weird destroyed text)

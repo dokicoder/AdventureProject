@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Yarn.Unity;
+using TMPro;
 
 public class NPCController : MonoBehaviour
 {
@@ -51,13 +52,13 @@ public class NPCController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // TODO: for this, canvas and label need to be active on startup. Not sure if this is good
         _nameLabel = GameObject.FindWithTag("NameLabel");
         _dialogueRunner = FindObjectOfType<DialogueRunner>();
         
         // the NPC might have a mesh renderr - if it does, this is a 3D NPC and we don't need to bother creating the outline
         try {
             CreateOutline();
-            GameObject.FindWithTag("NameLabel").GetComponent<UnityEngine.UI.Text>().color = Color;
         } catch( Exception e ) {}
 
         if (scriptToLoad != null) {
@@ -133,6 +134,11 @@ public class NPCController : MonoBehaviour
     }
 
     void ShowName(Boolean show) {
+        Component[] components = _nameLabel.GetComponents(typeof(Component));
+        foreach(Component component in components) {
+            Debug.Log(component.ToString());
+        }
+
         if(show) {
             _nameLabel.SetActive(true);
 
@@ -142,8 +148,8 @@ public class NPCController : MonoBehaviour
             Vector3 spriteTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfSpriteHeight, 0));
             _nameLabel.GetComponent<RectTransform>().position = spriteTopScreenPosition + TopOffset;
 
-            _nameLabel.GetComponent<UnityEngine.UI.Text>().color = Color;
-            _nameLabel.GetComponent<UnityEngine.UI.Text>().text = Name;
+            _nameLabel.GetComponent<TextMeshProUGUI>().color = Color;
+            _nameLabel.GetComponent<TextMeshProUGUI>().text = Name;
         } else {
             _nameLabel.SetActive(false);
         }

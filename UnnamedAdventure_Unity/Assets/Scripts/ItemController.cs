@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using TMPro;
 
 public class ItemController : MonoBehaviour
 {
@@ -49,8 +50,8 @@ public class ItemController : MonoBehaviour
             Vector3 meshTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfBoundsHeight, 0));
             _nameLabel.GetComponent<RectTransform>().position = meshTopScreenPosition + TopOffset;
 
-            _nameLabel.GetComponent<UnityEngine.UI.Text>().color = Color;
-            _nameLabel.GetComponent<UnityEngine.UI.Text>().text = Name;
+            _nameLabel.GetComponent<TextMeshProUGUI>().color = Color;
+            _nameLabel.GetComponent<TextMeshProUGUI>().text = Name;
         } else {
             _nameLabel.SetActive(false);
         }

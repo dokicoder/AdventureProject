@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Yarn.Unity;
+using TMPro;
 
 public class UIUpdateAdapter : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class UIUpdateAdapter : MonoBehaviour
 
     public DialogueRunner.StringUnityEvent onSpeakerUpdate;
 
-    public Text SpeakerText;
-    public Text TextText;
+    // TODO: Dear Dev (aka me), your naming sucks balls. Regards, yourself from the future
+    public TextMeshProUGUI SpeakerText;
+    public TextMeshProUGUI TextText;
 
     private List<NPCController> NPCs; 
 
@@ -21,6 +23,8 @@ public class UIUpdateAdapter : MonoBehaviour
     }
 
     public void LineUpdateAdapter(string line) {
+        Debug.Log(line);
+
         if(line.Contains(":")) {
             // TODO: what if I want to use a colon in dialogue, dummy?
             string[] lineComponents = line.Split(new[] { ':' }, 2);

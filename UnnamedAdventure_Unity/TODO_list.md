@@ -24,3 +24,4 @@ Tutourials:
 - add name and descriptions to items (objects) and so on
 - It should probably be possible to hack the outline of sprites with The SDF shader of TextMeshPro
 - Make a writeup on how TMPJuicer works. And how you integrated it with the UI Update adapter to reset the text and re-initialize the transforms and animation (remember the weird destroyed text)
+- - we could give different characters different tet speeds, character animations, sentence emphysis (delay between sentences in same line. To be implemented) - Test this. maybe it is cool

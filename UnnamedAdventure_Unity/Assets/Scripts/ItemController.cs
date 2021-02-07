@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using TMPro;
+using Yarn.Unity;
 
 public class ItemController : MonoBehaviour
 {
@@ -10,10 +11,13 @@ public class ItemController : MonoBehaviour
     private Material _outlineMaterial;
     private GameObject _nameLabel;
     private Renderer _renderer;
+    private DialogueRunner _dialogueRunner;
 
     // Start is called before the first frame update
     void Start()
     {
+        _dialogueRunner = FindObjectOfType<DialogueRunner>();
+
         _renderer = GetComponentInChildren<Renderer>();
 
         _nameLabel = GameObject.FindWithTag("NameLabel");
@@ -25,6 +29,11 @@ public class ItemController : MonoBehaviour
     }
 
     void OnMouseEnter() {
+        // Don't trigger when in dialog control when we're in dialogue
+        if (_dialogueRunner.IsDialogueRunning == true) {
+            return;
+        }
+
         SetHighlighted(true);
         ShowName(true);
     }

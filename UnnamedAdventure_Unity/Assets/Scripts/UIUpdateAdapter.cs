@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -33,8 +34,6 @@ public class UIUpdateAdapter : MonoBehaviour
     // SkipLine will on first trigger, finish the current line animation (if one is running)
     // On second trigger it will indicate that the line is completed and the next is requested by triggering the onLineCompleted event (which should request the next line somehow, probably using Yarn's DialogueUI script)
     public void SkipLine() {
-        Debug.LogWarning(textJuicer.IsPlaying);
-
         if(textJuicer.IsPlaying) {
             textJuicer.Complete();
             textJuicer.Stop();
@@ -48,40 +47,33 @@ public class UIUpdateAdapter : MonoBehaviour
         NPCs = new List<NPCController> ( FindObjectsOfType<NPCController> () );
     }
 
+    private (string name, string text) SplitLine(string line) {
+        string[] lineComponents = line.Split(new[] { ':' }, 2);
+
+        return (lineComponents[0], lineComponents[1]);
+    }
 
     public void LineUpdateAdapter(string line) {
         if(line.Contains(":")) {
-            // splitting in just two parts allows using a colon ':' in the normal text as well
-            string[] lineComponents = line.Split(new[] { ':' }, 2);
+            // split the next line string in two parts: the name label of the character reading [0], and the normal text [1] along a colon ':'
+            // IMPORTANT: The normal text may contain colons ':', the character name however MUST NOT 
+            (string name, string text) = SplitLine(line);
         
-		   
-
-            if(lineComponents.Length == 2) {
-                // TODO: use this to add delay after line ends and by this give more emphasis and structure to the sentences
-                string pattern = @"[^\.?!]+([\.]+|[?!]+)";
-                Regex rgx = new Regex(pattern);
-      
-                foreach (Match match in rgx.Matches(lineComponents[1])) {
-                    Debug.Log(String.Format("Found '{0}' at position {1}", match.Value.Trim(), match.Index));  
-                }
-
-                string name = lineComponents[0].TrimStart();
-                onSpeakerUpdate?.Invoke(name);
-                if(name == "Player") {
-                    SpeakerText.color = Color.white;
-                    TextText.color = Color.white;
-                }
-                try {
-                    var npcWithMatchingName = NPCs.Find(npc => npc.Name == name);
-                    SpeakerText.color = npcWithMatchingName.Color;
-                    TextText.color = npcWithMatchingName.Color;
-                } catch(Exception e) {}
-        
-                onLineUpdate?.Invoke(lineComponents[1].TrimStart());
+            onSpeakerUpdate?.Invoke(name);
+            if(name == "Player") {
+                SpeakerText.color = Color.white;
+                TextText.color = Color.white;
             }
+            try {
+                var npcWithMatchingName = NPCs.Find(npc => npc.Name == name);
+                SpeakerText.color = npcWithMatchingName.Color;
+                TextText.color = npcWithMatchingName.Color;
+            } catch(Exception e) {}
+    
+            onLineUpdate?.Invoke(text);
         }
         else {
-             onLineUpdate?.Invoke(line);
+            onLineUpdate?.Invoke(line);
         }
     }
 }

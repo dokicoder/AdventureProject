@@ -1791,6 +1791,7 @@ MonoBehaviour:
   tmpText: {fileID: 1127924100}
   duration: 0.05
   delay: 0.05
+  sentenceDelay: 0.4
   progress: 0
   playWhenReady: 0
   loop: 0
@@ -3284,9 +3285,9 @@ MonoBehaviour:
   onLineCompleted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1127924098}
+      - m_Target: {fileID: 5935829475375017867}
         m_TargetAssemblyTypeName: Yarn.Unity.DialogueUI, YarnSpinner.Unity
-        m_MethodName: 
+        m_MethodName: MarkLineComplete
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3296,7 +3297,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  textJuicer: {fileID: 0}
+  textJuicer: {fileID: 1127924103}
 --- !u!1 &7753959873309132014
 GameObject:
   m_ObjectHideFlags: 0

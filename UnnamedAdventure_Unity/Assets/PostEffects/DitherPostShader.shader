@@ -10,33 +10,28 @@ Shader "Hidden/Custom/PostDither"
 
     #define DITHER_MODE COLORS_27
 
-
     // StdLib.hlsl holds pre-configured vertex shaders (VertDefault), varying structs (VaryingsDefault), and most of the data you need to write common effects.
     #include "Packages/com.unity.postprocessing/PostProcessing/Shaders/StdLib.hlsl"
     TEXTURE2D_SAMPLER2D(_MainTex, sampler_MainTex);
     TEXTURE2D_SAMPLER2D(_Noise, sampler_Noise);
     float _CorrectGamma;
 
+    float _TexWidth;
+    float _TexHeight;
+
     float step4(float t, float4 vals) {
-        /*
         return
-            step(0.1667, t) * vals.r +
-            step(t, 0.1667) * step(0.5, t) * vals.g +
-            step(t, 0.5) * step(0.8333, t) * vals.b +
+            step(t, 0.16667) * vals.r +
+            step(0.16667, t) * step(t, 0.5) * vals.g +
+            step(0.5, t) * step(t, 0.8333) * vals.b +
             step(0.8333, t) * vals.a;
-        */
-        // TODO: fucking slow
-        if(t < 0.16667) return vals.r;
-        if(t < 0.5) return vals.g;
-        if(t < 0.8333) return vals.b;
-        return vals.a;
     }
 
     float step3(float t, float3 vals) {
-        // TODO: fucking slow
-        if(t < 0.25) return vals.r;
-        if(t < 0.75) return vals.g;
-        return vals.b;
+        return
+            step(t, 0.25) * vals.r +
+            step(0.25, t) * step(t, 0.75) * vals.g +
+            step(0.75, t) * vals.b;
     }
 
     // Lerp the pixel color with the luminance using the _Blend uniform.
@@ -56,7 +51,7 @@ Shader "Hidden/Custom/PostDither"
             // xy holds pixel width and height of viewport
             _ScreenParams.xy / 
             // TODO: hard-coded noise texture dimension. If noise size changes, so should this value
-            float2(256, 256);
+            float2(_TexWidth, _TexHeight);
 
         float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.texcoord);
       

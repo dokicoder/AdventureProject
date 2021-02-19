@@ -31,8 +31,11 @@ public sealed class GrayscaleRenderer : PostProcessEffectRenderer<Grayscale>
     {
         var sheet = context.propertySheets.Get(Shader.Find("Hidden/Custom/PostDither"));
         sheet.properties.SetFloat("_CorrectGamma", settings.gamma);
+
         sheet.properties.SetTexture("_Noise", settings.noise);
-        sheet.properties.SetFloat("_Time", Time.time);
+        sheet.properties.SetFloat("_TexWidth", settings.noise.value.width);
+        sheet.properties.SetFloat("_TexHeight", settings.noise.value.height);
+        
         context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 0);
     }
 }

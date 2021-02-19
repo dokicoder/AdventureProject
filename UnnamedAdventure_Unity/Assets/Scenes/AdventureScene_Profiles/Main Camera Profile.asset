@@ -18,10 +18,10 @@ MonoBehaviour:
     value: 1
   gamma:
     overrideState: 1
-    value: 1
+    value: 1.15
   noise:
     overrideState: 1
-    value: {fileID: 2800000, guid: c2021d0cc8bcf7e46953e59097984c8e, type: 3}
+    value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}
     defaultState: 1
 --- !u!114 &11400000
 MonoBehaviour:

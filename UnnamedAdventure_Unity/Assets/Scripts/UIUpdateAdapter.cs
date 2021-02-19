@@ -57,7 +57,8 @@ public class UIUpdateAdapter : MonoBehaviour
         if(line.Contains(":")) {
             // split the next line string in two parts: the name label of the character reading [0], and the normal text [1] along a colon ':'
             // IMPORTANT: The normal text may contain colons ':', the character name however MUST NOT 
-            (string name, string text) = SplitLine(line);
+            (string name, string textWithWhitespace) = SplitLine(line);
+            string text = textWithWhitespace.TrimStart();
         
             onSpeakerUpdate?.Invoke(name);
             if(name == "Player") {

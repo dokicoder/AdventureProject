@@ -16,12 +16,12 @@ MonoBehaviour:
   enabled:
     overrideState: 1
     value: 1
-  blend:
-    overrideState: 0
-    value: 0.5
+  gamma:
+    overrideState: 1
+    value: 0.68
   noise:
-    overrideState: 0
-    value: {fileID: 0}
+    overrideState: 1
+    value: {fileID: 2800000, guid: c2021d0cc8bcf7e46953e59097984c8e, type: 3}
     defaultState: 1
 --- !u!114 &11400000
 MonoBehaviour:

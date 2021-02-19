@@ -32,8 +32,7 @@ position: 149,-191
 Player: What should I ask the Constable?
 -> Crime Scene
     Player: So, what do you make of the crime scene, Constable?
-    Gumshoe: If you ask me, this is as straight a robbery as they come.
-    Gumshoe: No mysteries here, sir.
+    Gumshoe: If you ask me, this is as straight a robbery as they come. No mysteries here, sir.
     Player: Is that so? Where is the murder weapon, then?
     Gumshoe: Ok, you got me there. It has not turned up yet. 
     [[FillMeIn]]

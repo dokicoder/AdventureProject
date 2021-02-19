@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: as I see it this script does not serve any puropose. Delete please
 public class PointerController : MonoBehaviour
 {
     // Start is called before the first frame update

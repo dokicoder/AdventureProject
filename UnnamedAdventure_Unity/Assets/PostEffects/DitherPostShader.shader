@@ -1,16 +1,49 @@
 Shader "Hidden/Custom/PostDither"
 {
     HLSLINCLUDE 
+
+    #define OFF -1
+    #define BLACK_AND_WHITE 0
+    #define COLORS_8 1
+    #define COLORS_27 2
+    #define COLORS_64 3
+
+    #define DITHER_MODE COLORS_27
+
+
     // StdLib.hlsl holds pre-configured vertex shaders (VertDefault), varying structs (VaryingsDefault), and most of the data you need to write common effects.
     #include "Packages/com.unity.postprocessing/PostProcessing/Shaders/StdLib.hlsl"
     TEXTURE2D_SAMPLER2D(_MainTex, sampler_MainTex);
     TEXTURE2D_SAMPLER2D(_Noise, sampler_Noise);
     float _CorrectGamma;
+
+    float step4(float t, float4 vals) {
+        /*
+        return
+            step(0.1667, t) * vals.r +
+            step(t, 0.1667) * step(0.5, t) * vals.g +
+            step(t, 0.5) * step(0.8333, t) * vals.b +
+            step(0.8333, t) * vals.a;
+        */
+        // TODO: fucking slow
+        if(t < 0.16667) return vals.r;
+        if(t < 0.5) return vals.g;
+        if(t < 0.8333) return vals.b;
+        return vals.a;
+    }
+
+    float step3(float t, float3 vals) {
+        // TODO: fucking slow
+        if(t < 0.25) return vals.r;
+        if(t < 0.75) return vals.g;
+        return vals.b;
+    }
+
     // Lerp the pixel color with the luminance using the _Blend uniform.
     float4 Frag(VaryingsDefault i) : SV_Target
     {
         /*
-        we could get aspect using differentials. Not needed though. Keep this for reference
+        we could get aspect using differentials, yet we get them from Unity. Keeping this for reference
         float dx = ddx(i.texcoord.x);
         float dy = ddy(i.texcoord.y);
         float aspect = dx / dy;
@@ -26,33 +59,40 @@ Shader "Hidden/Custom/PostDither"
             float2(256, 256);
 
         float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.texcoord);
+      
+        #if DITHER_MODE == OFF
+            return color;
+        #endif
 
         color = pow(color, _CorrectGamma);
-
+        
         float4 blueNoise = SAMPLE_TEXTURE2D(_Noise, sampler_Noise, aspectAndScale * i.texcoord);
 
-        //return float4( step(color.rgb, blueNoise.rgb), 1.0 );
-
-        //return float4( step(color.r, blueNoise.r), step(color.g, blueNoise.g), step(color.b, blueNoise.b), 1.0 );
-
-    // Compute the luminance for the current pixel
-        float luminance = dot(color.rgb, float3(0.2126729, 0.7151522, 0.0721750));
-        //color.rgb = lerp(color.rgb, luminance.xxx, _Blend.xxx);
-        //float luminance = dot(color.rgb, float3(0.2126729, 0.7151522, 0.0721750));
-        //return float4( step( blueNoise.g, luminance ).rrr, 1.0 );
-        return float4( step( blueNoise.rgb, color.rgb ), 1.0 );
-
-
-        //float timeMod = fmod(_Time, 0.05) * 20;
-        //return float4(timeMod, timeMod, timeMod, 1.0);
-
-/*
-        float4 noiseColor = SAMPLE_TEXTURE2D(_Noise, sampler_Noise, i.texcoord);
-
-        return  float4(noiseColor.r, 1) * step(2.0, timeMod) +
-                float4(noiseColor.g, 1) * (2.0 - step(2.0, timeMod));
-*/
-
+        #if DITHER_MODE == BLACK_AND_WHITE
+            // Compute the luminance for the current pixel
+            float luminance = dot(color.rgb, float3(0.2126729, 0.7151522, 0.0721750));
+            return float4( step(-luminance, -blueNoise.r).rrr, 1.0 );
+        #elif DITHER_MODE == COLORS_8
+            return float4( step(-color.rgb, -blueNoise.rgb), 1.0 );
+        #elif DITHER_MODE == COLORS_27
+            float4 unbiasedBlueNoise = (blueNoise - 0.5) / 3.0;
+            float3 samples = float3(0, 0.5, 1.0);
+            return float4( 
+                step3( unbiasedBlueNoise.r + color.r, samples ), 
+                step3( unbiasedBlueNoise.g + color.g, samples ), 
+                step3( unbiasedBlueNoise.b + color.b, samples ), 
+                1.0 
+            );
+        #elif DITHER_MODE == COLORS_64
+            float4 unbiasedBlueNoise = (blueNoise - 0.5) / 4.0;
+            float4 samples = float4(0, 0.3333, 0.6667, 1.0);
+            return float4( 
+                step4( unbiasedBlueNoise.r + color.r, samples ), 
+                step4( unbiasedBlueNoise.g + color.g, samples ), 
+                step4( unbiasedBlueNoise.b + color.b, samples ), 
+                1.0 
+            );
+        #endif
     }
     ENDHLSL
     SubShader

@@ -8,7 +8,7 @@ Shader "Hidden/Custom/PostDither"
     #define COLORS_27 2
     #define COLORS_64 3
 
-    #define DITHER_MODE COLORS_27
+    #define DITHER_MODE COLORS_64
 
     // StdLib.hlsl holds pre-configured vertex shaders (VertDefault), varying structs (VaryingsDefault), and most of the data you need to write common effects.
     #include "Packages/com.unity.postprocessing/PostProcessing/Shaders/StdLib.hlsl"
@@ -18,6 +18,7 @@ Shader "Hidden/Custom/PostDither"
 
     float _TexWidth;
     float _TexHeight;
+    float _NoiseScaling;
 
     float step4(float t, float4 vals) {
         return
@@ -70,7 +71,7 @@ Shader "Hidden/Custom/PostDither"
         #elif DITHER_MODE == COLORS_8
             return float4( step(-color.rgb, -blueNoise.rgb), 1.0 );
         #elif DITHER_MODE == COLORS_27
-            float4 unbiasedBlueNoise = (blueNoise - 0.5) / 3.0;
+            float4 unbiasedBlueNoise = (blueNoise - 0.5) / 3.0 * _NoiseScaling;
             float3 samples = float3(0, 0.5, 1.0);
             return float4( 
                 step3( unbiasedBlueNoise.r + color.r, samples ), 
@@ -79,7 +80,7 @@ Shader "Hidden/Custom/PostDither"
                 1.0 
             );
         #elif DITHER_MODE == COLORS_64
-            float4 unbiasedBlueNoise = (blueNoise - 0.5) / 4.0;
+            float4 unbiasedBlueNoise = (blueNoise - 0.5) / 4.0 * _NoiseScaling;
             float4 samples = float4(0, 0.3333, 0.6667, 1.0);
             return float4( 
                 step4( unbiasedBlueNoise.r + color.r, samples ), 

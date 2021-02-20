@@ -14,8 +14,6 @@ public class PointerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))

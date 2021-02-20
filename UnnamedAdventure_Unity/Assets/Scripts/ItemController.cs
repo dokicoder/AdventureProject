@@ -13,6 +13,8 @@ public class ItemController : MonoBehaviour
     private Renderer _renderer;
     private DialogueRunner _dialogueRunner;
 
+    private Boolean _hovered = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,17 +30,27 @@ public class ItemController : MonoBehaviour
         SetHighlighted(false);
     }
 
+    void Update() {
+        if(_hovered) {
+            UpdateLabelPosition();
+        }
+    }
+
     void OnMouseEnter() {
         // Don't trigger when in dialog control when we're in dialogue
         if (_dialogueRunner.IsDialogueRunning == true) {
             return;
         }
 
+        _hovered = true;
+
         SetHighlighted(true);
         ShowName(true);
     }
 
     void OnMouseExit() {
+        _hovered = false;
+
         SetHighlighted(false);
         ShowName(false);
     }
@@ -49,15 +61,19 @@ public class ItemController : MonoBehaviour
         } catch( Exception e ) {}
     }
 
+    void UpdateLabelPosition() {
+        // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
+        float halfBoundsHeight = _renderer.bounds.size.y * _renderer.transform.lossyScale.y * 0.5f;
+
+        Vector3 meshTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfBoundsHeight, 0));
+        _nameLabel.GetComponent<RectTransform>().position = meshTopScreenPosition + TopOffset;
+    }
+
      void ShowName(Boolean show) {
         if(show) {
             _nameLabel.SetActive(true);
 
-            // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
-            float halfBoundsHeight = _renderer.bounds.size.y * _renderer.transform.lossyScale.y * 0.5f;
-
-            Vector3 meshTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfBoundsHeight, 0));
-            _nameLabel.GetComponent<RectTransform>().position = meshTopScreenPosition + TopOffset;
+            UpdateLabelPosition();
 
             _nameLabel.GetComponent<TextMeshProUGUI>().color = Color;
             _nameLabel.GetComponent<TextMeshProUGUI>().text = Name;

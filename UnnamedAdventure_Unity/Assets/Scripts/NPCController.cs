@@ -22,6 +22,8 @@ public class NPCController : MonoBehaviour
     private DialogueRunner _dialogueRunner;
     private GameObject _nameLabel;
 
+    private Boolean _hovered = false;
+
     void CreateOutline() {
         GameObject outline = new GameObject("_Outline");
 
@@ -68,10 +70,10 @@ public class NPCController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        if(_hovered) {
+            UpdateLabelPosition();
+        }
     }
 
     void OnMouseDown() {
@@ -94,14 +96,14 @@ public class NPCController : MonoBehaviour
             return;
         }
 
+        _hovered = true;
+
         SetHighlighted(true);
         ShowName(true);
     }
 
     void OnMouseExit() {
-        if (_dialogueRunner?.IsDialogueRunning == true) {
-            return;
-        }
+        _hovered = false;
 
         SetHighlighted(false);
         ShowName(false);
@@ -133,20 +135,19 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    void ShowName(Boolean show) {
-        Component[] components = _nameLabel.GetComponents(typeof(Component));
-        foreach(Component component in components) {
-            Debug.Log(component.ToString());
-        }
+    void UpdateLabelPosition() {
+         // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
+        float halfSpriteHeight = GetComponent<SpriteRenderer>().sprite.bounds.size.y * transform.localScale.y * 0.5f;
 
+        Vector3 spriteTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfSpriteHeight, 0));
+        _nameLabel.GetComponent<RectTransform>().position = spriteTopScreenPosition + TopOffset;
+    }
+
+    void ShowName(Boolean show) {
         if(show) {
             _nameLabel.SetActive(true);
 
-            // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
-            float halfSpriteHeight = GetComponent<SpriteRenderer>().sprite.bounds.size.y * transform.localScale.y * 0.5f;
-
-            Vector3 spriteTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfSpriteHeight, 0));
-            _nameLabel.GetComponent<RectTransform>().position = spriteTopScreenPosition + TopOffset;
+            UpdateLabelPosition();
 
             _nameLabel.GetComponent<TextMeshProUGUI>().color = Color;
             _nameLabel.GetComponent<TextMeshProUGUI>().text = Name;

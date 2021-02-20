@@ -19,6 +19,9 @@ MonoBehaviour:
   gamma:
     overrideState: 1
     value: 1.15
+  noiseScaling:
+    overrideState: 1
+    value: 5.25
   noise:
     overrideState: 1
     value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}

@@ -29,7 +29,7 @@ public class UIUpdateAdapter : MonoBehaviour
     [SerializeField]
     private TMP_TextJuicer textJuicer;
 
-    private bool userRequestedNextLine = false;
+    private Boolean _autoContinueAfterLine = false;
 
     // SkipLine will on first trigger, finish the current line animation (if one is running)
     // On second trigger it will indicate that the line is completed and the next is requested by triggering the onLineCompleted event (which should request the next line somehow, probably using Yarn's DialogueUI script)
@@ -40,6 +40,13 @@ public class UIUpdateAdapter : MonoBehaviour
         }
         else {
             onLineCompleted?.Invoke();
+        }
+    }
+
+    void Update() {
+        if(_autoContinueAfterLine && !textJuicer.IsPlaying) {
+            onLineCompleted?.Invoke();
+            _autoContinueAfterLine = false;
         }
     }
 
@@ -54,6 +61,12 @@ public class UIUpdateAdapter : MonoBehaviour
     }
 
     public void LineUpdateAdapter(string line) {
+        if(line.Contains(">>>")) {
+            line = line.Replace(">>>", "");
+
+            _autoContinueAfterLine = true;
+        }
+
         if(line.Contains(":")) {
             // split the next line string in two parts: the name label of the character reading [0], and the normal text [1] along a colon ':'
             // IMPORTANT: The normal text may contain colons ':', the character name however MUST NOT 

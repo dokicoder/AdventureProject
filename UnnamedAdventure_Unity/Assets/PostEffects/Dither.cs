@@ -8,8 +8,11 @@ using UnityEngine.Rendering.PostProcessing;
 [PostProcess(typeof(GrayscaleRenderer), PostProcessEvent.AfterStack, "Custom/Grayscale", allowInSceneView: false)]
 public sealed class Grayscale : PostProcessEffectSettings
 {
-    [Range(0.1f, 10f), Tooltip("Gamma Correction.")] 
+    [Range(0.1f, 10f), Tooltip("Gamma Correction")] 
     public FloatParameter gamma = new FloatParameter { value = 1.0f };
+
+    [Range(0.0f, 10f), Tooltip("Scaling of the noise threshold. Larger value will lead to a more noisy appearance")] 
+    public FloatParameter noiseScaling = new FloatParameter { value = 1.0f };
 
     public TextureParameter noise = new TextureParameter { };
 
@@ -31,11 +34,12 @@ public sealed class GrayscaleRenderer : PostProcessEffectRenderer<Grayscale>
     {
         var sheet = context.propertySheets.Get(Shader.Find("Hidden/Custom/PostDither"));
         sheet.properties.SetFloat("_CorrectGamma", settings.gamma);
+        sheet.properties.SetFloat("_NoiseScaling", settings.noiseScaling);
 
         sheet.properties.SetTexture("_Noise", settings.noise);
         sheet.properties.SetFloat("_TexWidth", settings.noise.value.width);
         sheet.properties.SetFloat("_TexHeight", settings.noise.value.height);
-        
+
         context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 0);
     }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Yarn.Unity;
 using TMPro;
@@ -15,6 +16,8 @@ public class UIUpdateAdapter : MonoBehaviour
 
     public DialogueRunner.StringUnityEvent onSpeakerUpdate;
 
+    public UnityEvent onLineFinished;
+
     // TODO: Dear Dev (aka me), your naming sucks balls. Regards, yourself from the future
     public TextMeshProUGUI SpeakerText;
     public TextMeshProUGUI TextText;
@@ -24,6 +27,8 @@ public class UIUpdateAdapter : MonoBehaviour
     /// <summary>
     /// This event is triggered after the whole line is completed (nut not after just one of the sentences is complete)
     /// </summary>
+    public UnityEngine.Events.UnityEvent onNextLineRequested;
+
     public UnityEngine.Events.UnityEvent onLineCompleted;
 
     [SerializeField]
@@ -31,22 +36,45 @@ public class UIUpdateAdapter : MonoBehaviour
 
     private Boolean _autoContinueAfterLine = false;
 
+    private Boolean _onLineDisplayEndedInvoked = false;
+
+    private void RequestNextLine() {
+        _autoContinueAfterLine = false;
+        onNextLineRequested?.Invoke();
+    }
+
+    private void LineDisplayEnded() {
+        Debug.LogWarning("onLineDisplayEnded");
+        _onLineDisplayEndedInvoked = true;
+        onLineCompleted?.Invoke();
+    }
+
     // SkipLine will on first trigger, finish the current line animation (if one is running)
     // On second trigger it will indicate that the line is completed and the next is requested by triggering the onLineCompleted event (which should request the next line somehow, probably using Yarn's DialogueUI script)
     public void SkipLine() {
         if(textJuicer.IsPlaying) {
             textJuicer.Complete();
             textJuicer.Stop();
+
+            LineDisplayEnded();
         }
         else {
-            onLineCompleted?.Invoke();
+            RequestNextLine();
         }
     }
 
     void Update() {
-        if(_autoContinueAfterLine && !textJuicer.IsPlaying) {
-            onLineCompleted?.Invoke();
-            _autoContinueAfterLine = false;
+        if(!textJuicer.IsPlaying) {
+            if(!_onLineDisplayEndedInvoked) {
+                LineDisplayEnded();
+            }
+
+            if(_autoContinueAfterLine) {
+                RequestNextLine();
+            }
+        }
+        else {
+            _onLineDisplayEndedInvoked = false;
         }
     }
 
@@ -61,6 +89,7 @@ public class UIUpdateAdapter : MonoBehaviour
     }
 
     public void LineUpdateAdapter(string line) {
+        /// the ">>>" identifier is used to indicate that the dialogue should be automatically continued after this line
         if(line.Contains(">>>")) {
             line = line.Replace(">>>", "");
 
@@ -69,9 +98,13 @@ public class UIUpdateAdapter : MonoBehaviour
 
         if(line.Contains(":")) {
             // split the next line string in two parts: the name label of the character reading [0], and the normal text [1] along a colon ':'
-            // IMPORTANT: The normal text may contain colons ':', the character name however MUST NOT 
-            (string name, string textWithWhitespace) = SplitLine(line);
-            string text = textWithWhitespace.TrimStart();
+            // IMPORTANT: The normal text may contain colons ':', the character name however MUST NOT
+            (string name, string textUntransformed) = SplitLine(line);
+            string text = textUntransformed
+                // transform indicated line breaks in YARN into actual line breaks
+                .Replace("\\n", "\n")
+                // remove possible whitespace that may remain from split
+                .Trim();
         
             onSpeakerUpdate?.Invoke(name);
             if(name == "Player") {

@@ -123,6 +123,13 @@ public class CPC_CameraPathInspector : Editor
         GUILayout.Space(10);
         DrawRawValues();
         serializedObjectTarget.ApplyModifiedProperties();
+
+        if (GUILayout.Button(new GUIContent("Align Camera Orientations with Tangent"))) {
+            foreach (var index in t.points)
+            {
+                index.rotation = Quaternion.LookRotation(index.handlenext, Vector3.up);
+            }
+        }
     }
 
     void OnSceneGUI()

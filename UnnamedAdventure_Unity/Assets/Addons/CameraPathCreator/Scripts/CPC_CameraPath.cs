@@ -27,7 +27,6 @@ public enum CPC_EAfterLoop
 [System.Serializable]
 public class CPC_Point
 {
-
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 handleprev;
@@ -133,7 +132,7 @@ public class CPC_CameraPath : MonoBehaviour
     /// <param name="seconds">New time in seconds for entire path</param>
     public void UpdateTimeInSeconds(float seconds)
     {
-        timePerSegment = seconds / ((looped) ? points.Count : points.Count - 1);
+        timePerSegment = seconds / (looped ? points.Count : points.Count - 1);
     }
 
     /// <summary>
@@ -215,10 +214,13 @@ public class CPC_CameraPath : MonoBehaviour
     public void RefreshTransform()
     {
         selectedCamera.transform.position = GetBezierPosition(currentWaypointIndex, currentTimeInWaypoint);
-        if (!lookAtTarget)
-            selectedCamera.transform.rotation = GetLerpRotation(currentWaypointIndex, currentTimeInWaypoint);
-        else
-            selectedCamera.transform.rotation = Quaternion.LookRotation((target.transform.position - selectedCamera.transform.position).normalized);
+        selectedCamera.transform.rotation = GetCurrentViewDirection();
+    }
+
+    private Quaternion GetCurrentViewDirection() {
+        return lookAtTarget ? 
+            Quaternion.LookRotation((target.transform.position - selectedCamera.transform.position).normalized) :
+            GetLerpRotation(currentWaypointIndex, currentTimeInWaypoint);
     }
 
     IEnumerator FollowPath(float time)
@@ -227,17 +229,25 @@ public class CPC_CameraPath : MonoBehaviour
         currentWaypointIndex = 0;
         while (currentWaypointIndex < points.Count)
         {
-            currentTimeInWaypoint = 0;
+            // take over amount the step interpolation overshot instead of deleting it
+            currentTimeInWaypoint = Mathf.Repeat(currentTimeInWaypoint, 1);
+            //currentTimeInWaypoint = 0;
+
             while (currentTimeInWaypoint < 1)
             {
                 if (!paused)
                 {
                     currentTimeInWaypoint += Time.deltaTime / timePerSegment;
-                    selectedCamera.transform.position = GetBezierPosition(currentWaypointIndex, currentTimeInWaypoint);
-                    if (!lookAtTarget)
-                        selectedCamera.transform.rotation = GetLerpRotation(currentWaypointIndex, currentTimeInWaypoint);
-                    else
-                        selectedCamera.transform.rotation = Quaternion.LookRotation((target.transform.position - selectedCamera.transform.position).normalized);
+
+                    // TODO: move variable declarations outside in case compiler is not optimizing for this (or proflie to check)
+                    Vector3 camPos = GetBezierPosition(currentWaypointIndex, currentTimeInWaypoint);
+                    
+                    //Quaternion camRot = GetCurrentViewDirection();
+                    Vector3 tangentDir = camPos - selectedCamera.transform.position;
+                    Quaternion camRot = GetTangentRotation(tangentDir, Vector3.up);
+
+                    selectedCamera.transform.position = camPos;
+                    selectedCamera.transform.rotation = camRot;
                 }
                 yield return 0;
             }
@@ -250,9 +260,7 @@ public class CPC_CameraPath : MonoBehaviour
 
     int GetNextIndex(int index)
     {
-        if (index == points.Count-1)
-            return 0;
-        return index + 1;
+        return (index + 1) % points.Count;
     }
 
     Vector3 GetBezierPosition(int pointIndex, float time)
@@ -275,7 +283,19 @@ public class CPC_CameraPath : MonoBehaviour
 
     private Quaternion GetLerpRotation(int pointIndex, float time)
     {
-        return Quaternion.LerpUnclamped(points[pointIndex].rotation, points[GetNextIndex(pointIndex)].rotation, points[pointIndex].rotationCurve.Evaluate(time));
+        float t = points[pointIndex].rotationCurve.Evaluate(time);
+
+        return Quaternion.LerpUnclamped(
+            points[pointIndex].rotation, 
+            points[GetNextIndex(pointIndex)].rotation, 
+            t
+        );
+    }
+
+    private Quaternion GetTangentRotation(Vector3 tangent, Vector3 up)
+    {
+        // TODO: since this is a simple paramteric curve, there should be an exact way to calculate the tangent 
+        return Quaternion.LookRotation(tangent, up);
     }
 
 #if UNITY_EDITOR

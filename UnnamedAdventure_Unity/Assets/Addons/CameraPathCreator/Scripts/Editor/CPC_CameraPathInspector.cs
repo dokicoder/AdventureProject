@@ -55,7 +55,7 @@ public class CPC_CameraPathInspector : Editor
     private SerializedObject serializedObjectTarget;
     private SerializedProperty useMainCameraProperty;
     private SerializedProperty selectedCameraProperty;
-    private SerializedProperty lookAtTargetProperty;
+    private SerializedProperty cameraDirectionMode;
     private SerializedProperty lookAtTargetTransformProperty;
     private SerializedProperty playOnAwakeProperty;
     private SerializedProperty playOnAwakeTimeProperty;
@@ -165,7 +165,7 @@ public class CPC_CameraPathInspector : Editor
         serializedObjectTarget = new SerializedObject(t);
         useMainCameraProperty = serializedObjectTarget.FindProperty("useMainCamera");
         selectedCameraProperty = serializedObjectTarget.FindProperty("selectedCamera");
-        lookAtTargetProperty = serializedObjectTarget.FindProperty("lookAtTarget");
+        cameraDirectionMode = serializedObjectTarget.FindProperty("cameraDirectionMode");
         lookAtTargetTransformProperty = serializedObjectTarget.FindProperty("target");
         visualPathProperty = serializedObjectTarget.FindProperty("visual.pathColor");
         visualInactivePathProperty = serializedObjectTarget.FindProperty("visual.inactivePathColor");
@@ -370,7 +370,38 @@ public class CPC_CameraPathInspector : Editor
     }
 
     void DrawBasicSettings()
-    {
+    {   
+        GUILayout.BeginHorizontal();
+
+        bool correctUpVector = cameraDirectionMode.intValue == (int) CPC_CameraDirectionMode.InterpolateDirectionWithCorrectedUpVector;
+
+        int cameraMode = correctUpVector ? (int) CPC_CameraDirectionMode.InterpolateDirection : cameraDirectionMode.intValue;
+
+        Debug.LogWarning("cameraMode " + cameraMode);
+
+        int cameraModeSelectionResult = GUILayout.SelectionGrid(cameraMode, new string[] { "Look at target", "Interpolate orientation", "Follow tangent direction" }, 3);
+        GUILayout.EndHorizontal();
+        
+        GUILayout.BeginHorizontal();
+
+        GUI.enabled = cameraModeSelectionResult == (int) CPC_CameraDirectionMode.InterpolateDirection || correctUpVector;
+
+        //GUILayout.Label("Look at target transform:", GUILayout.Width(Screen.width / 3f));
+        bool correctUpVectorSelectionResult = GUILayout.Toggle(correctUpVector, "Correct Up vector", GUILayout.Width(Screen.width/3f));
+        
+        if(correctUpVectorSelectionResult != correctUpVector) {
+            cameraDirectionMode.intValue = (int) (correctUpVectorSelectionResult ? CPC_CameraDirectionMode.InterpolateDirectionWithCorrectedUpVector : CPC_CameraDirectionMode.InterpolateDirection);
+        } else {
+            cameraDirectionMode.intValue = cameraModeSelectionResult == (int) CPC_CameraDirectionMode.InterpolateDirection ?
+            (int) (correctUpVector ? CPC_CameraDirectionMode.InterpolateDirectionWithCorrectedUpVector :  CPC_CameraDirectionMode.InterpolateDirection) :
+            cameraModeSelectionResult;
+        }
+
+        GUI.enabled = cameraDirectionMode.intValue == (int) CPC_CameraDirectionMode.LookAtTarget;
+        lookAtTargetTransformProperty.objectReferenceValue = (Transform)EditorGUILayout.ObjectField(lookAtTargetTransformProperty.objectReferenceValue, typeof(Transform), true);
+        GUI.enabled = true;
+        GUILayout.EndHorizontal();
+
         GUILayout.BeginHorizontal();
         useMainCameraProperty.boolValue = GUILayout.Toggle(useMainCameraProperty.boolValue, "Use main camera", GUILayout.Width(Screen.width / 3f));
         GUI.enabled = !useMainCameraProperty.boolValue;
@@ -379,17 +410,10 @@ public class CPC_CameraPathInspector : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        lookAtTargetProperty.boolValue = GUILayout.Toggle(lookAtTargetProperty.boolValue, "Look at target", GUILayout.Width(Screen.width / 3f));
-        GUI.enabled = lookAtTargetProperty.boolValue;
-        lookAtTargetTransformProperty.objectReferenceValue = (Transform)EditorGUILayout.ObjectField(lookAtTargetTransformProperty.objectReferenceValue, typeof(Transform), true);
-        GUI.enabled = true;
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
         loopedProperty.boolValue = GUILayout.Toggle(loopedProperty.boolValue, "Looped", GUILayout.Width(Screen.width/3f));
         GUI.enabled = loopedProperty.boolValue;
         GUILayout.Label("After loop:", GUILayout.Width(Screen.width / 4f));
-        afterLoopProperty.enumValueIndex = Convert.ToInt32(EditorGUILayout.EnumPopup((CPC_EAfterLoop)afterLoopProperty.intValue));
+        afterLoopProperty.intValue = Convert.ToInt32(EditorGUILayout.EnumPopup((CPC_EAfterLoop)afterLoopProperty.intValue));
         GUI.enabled = true;
         GUILayout.EndHorizontal();
 

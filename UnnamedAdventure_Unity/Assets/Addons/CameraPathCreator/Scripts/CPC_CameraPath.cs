@@ -18,6 +18,13 @@ public enum CPC_ECurveType
     Custom
 }
 
+public enum CPC_CameraDirectionMode:int {
+    LookAtTarget,
+    InterpolateDirection,
+    FollowTangent,
+    InterpolateDirectionWithCorrectedUpVector,
+}
+
 public enum CPC_EAfterLoop
 {
     Continue,
@@ -56,7 +63,7 @@ public class CPC_CameraPath : MonoBehaviour
 
     public bool useMainCamera = true;
     public Camera selectedCamera;
-    public bool lookAtTarget = false;
+    public CPC_CameraDirectionMode cameraDirectionMode = CPC_CameraDirectionMode.InterpolateDirection;
     public Transform target;
     public bool playOnAwake = false;
     public float playOnAwakeTime = 10;
@@ -85,10 +92,10 @@ public class CPC_CameraPath : MonoBehaviour
             Debug.LogError("No camera selected for following path, defaulting to main camera");
         }
 
-	    if (lookAtTarget && target == null)
+	    if (cameraDirectionMode == CPC_CameraDirectionMode.LookAtTarget && target == null)
 	    {
-	        lookAtTarget = false;
-            Debug.LogError("No target selected to look at, defaulting to normal rotation");
+	        cameraDirectionMode = CPC_CameraDirectionMode.InterpolateDirection;
+            Debug.LogError("No target selected to look at, defaulting to rotation interpolation");
         }
 
 	    foreach (var index in points)
@@ -218,9 +225,19 @@ public class CPC_CameraPath : MonoBehaviour
     }
 
     private Quaternion GetCurrentViewDirection() {
-        return lookAtTarget ? 
-            Quaternion.LookRotation((target.transform.position - selectedCamera.transform.position).normalized) :
-            GetLerpRotation(currentWaypointIndex, currentTimeInWaypoint);
+        if( cameraDirectionMode == CPC_CameraDirectionMode.LookAtTarget ) {
+            return Quaternion.LookRotation((target.transform.position - selectedCamera.transform.position).normalized);
+        }
+
+        Quaternion lerpRotation = GetLerpRotation(currentWaypointIndex, currentTimeInWaypoint);
+        // correct up-vector
+        if(cameraDirectionMode == CPC_CameraDirectionMode.InterpolateDirectionWithCorrectedUpVector) {
+            return Quaternion.LookRotation(lerpRotation * Vector3.forward, Vector3.up);
+        }
+
+        // if cameraDirectionMode == CPC_CameraDirectionMode.InterpolateDirection
+        return lerpRotation;
+        
     }
 
     IEnumerator FollowPath(float time)
@@ -241,10 +258,15 @@ public class CPC_CameraPath : MonoBehaviour
 
                     // TODO: move variable declarations outside in case compiler is not optimizing for this (or proflie to check)
                     Vector3 camPos = GetBezierPosition(currentWaypointIndex, currentTimeInWaypoint);
-                    
-                    //Quaternion camRot = GetCurrentViewDirection();
-                    Vector3 tangentDir = camPos - selectedCamera.transform.position;
-                    Quaternion camRot = GetTangentRotation(tangentDir, Vector3.up);
+                    Quaternion camRot = selectedCamera.transform.rotation;
+
+                    if ( cameraDirectionMode == CPC_CameraDirectionMode.FollowTangent ) {
+                        Vector3 tangentDir = camPos - selectedCamera.transform.position;
+                        camRot = GetTangentRotation(tangentDir, Vector3.up);
+                    }
+                    else {
+                        camRot = GetCurrentViewDirection();
+                    }
 
                     selectedCamera.transform.position = camPos;
                     selectedCamera.transform.rotation = camRot;

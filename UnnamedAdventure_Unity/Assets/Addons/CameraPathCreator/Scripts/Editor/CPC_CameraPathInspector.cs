@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
+namespace CPC_CAMERA_PATH {
+
 public enum CPC_EManipulationModes
 {
     Free,
@@ -169,7 +171,7 @@ public class CPC_CameraPathInspector : Editor
         lookAtTargetTransformProperty = serializedObjectTarget.FindProperty("target");
         visualPathProperty = serializedObjectTarget.FindProperty("visual.pathColor");
         visualInactivePathProperty = serializedObjectTarget.FindProperty("visual.inactivePathColor");
-        visualFrustumProperty = serializedObjectTarget.FindProperty("visual.frustrumColor");
+        visualFrustumProperty = serializedObjectTarget.FindProperty("visual.frustumColor");
         visualHandleProperty = serializedObjectTarget.FindProperty("visual.handleColor");
         loopedProperty = serializedObjectTarget.FindProperty("looped");
         alwaysShowProperty = serializedObjectTarget.FindProperty("alwaysShow");
@@ -774,19 +776,21 @@ public class CPC_CameraPathInspector : Editor
                 GUILayout.BeginVertical("Box");
                 Vector3 pos = EditorGUILayout.Vector3Field("Waypoint Position", i.position);
                 Quaternion rot = Quaternion.Euler(EditorGUILayout.Vector3Field("Waypoint Rotation", i.rotation.eulerAngles));
-                Vector3 posp = EditorGUILayout.Vector3Field("Previous Handle Offset", i.handleprev);
-                Vector3 posn = EditorGUILayout.Vector3Field("Next Handle Offset", i.handlenext);
+                Vector3 posPrevious = EditorGUILayout.Vector3Field("Previous Handle Offset", i.handleprev);
+                Vector3 posNext = EditorGUILayout.Vector3Field("Next Handle Offset", i.handlenext);
                 GUILayout.EndVertical();
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(t, "Changed waypoint transform");
                     i.position = pos;
                     i.rotation = rot;
-                    i.handleprev = posp;
-                    i.handlenext = posn;
+                    i.handleprev = posPrevious;
+                    i.handlenext = posNext;
                     SceneView.RepaintAll();
                 }
             }
         }
     }
+}
+
 }

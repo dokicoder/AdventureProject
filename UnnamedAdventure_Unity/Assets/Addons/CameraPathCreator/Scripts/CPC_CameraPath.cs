@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace CPC_CAMERA_PATH {
+
 [System.Serializable]
 public class CPC_Visual
 {
     public Color pathColor = Color.green;
     public Color inactivePathColor = Color.gray;
-    public Color frustrumColor = Color.white;
+    public Color frustumColor = Color.white;
     public Color handleColor = Color.yellow;
 }
 
@@ -19,6 +21,8 @@ public enum CPC_ECurveType
 }
 
 public enum CPC_CameraDirectionMode:int {
+
+
     LookAtTarget,
     InterpolateDirection,
     FollowTangent,
@@ -350,12 +354,14 @@ public class CPC_CameraPath : MonoBehaviour
             {
                 var index = points[i];
                 Gizmos.matrix = Matrix4x4.TRS(index.position, index.rotation, Vector3.one);
-                Gizmos.color = visual.frustrumColor;
+                Gizmos.color = visual.frustumColor;
                 Gizmos.DrawFrustum(Vector3.zero, 90f, 0.25f, 0.01f, 1.78f);
                 Gizmos.matrix = Matrix4x4.identity;
             }
         }
     }
 #endif
+
+}
 
 }

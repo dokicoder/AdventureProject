@@ -5,7 +5,7 @@ using UnityEngine.Rendering.PostProcessing;
 //The Serializable attribute allows Unity to serialize this class and extend PostProcessEffectSettings.
 [Serializable] 
 // The [PostProcess()] attribute tells Unity that this class holds post-processing data. The first parameter links the settings to a renderer. The second parameter creates the injection point for the effect. The third parameter is the menu entry for the effect. You can use a forward slash (/) to create sub-menu categories. 
-[PostProcess(typeof(GrayscaleRenderer), PostProcessEvent.AfterStack, "Custom/Grayscale", allowInSceneView: false)]
+[PostProcess(typeof(GrayscaleRenderer), PostProcessEvent.AfterStack, "Custom/Dither", allowInSceneView: false)]
 public sealed class Grayscale : PostProcessEffectSettings
 {
     [Range(0.1f, 10f), Tooltip("Gamma Correction")] 

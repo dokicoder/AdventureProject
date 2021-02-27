@@ -1,6 +1,6 @@
 * TODOs:
 
-Tutourials:
+## Tutorials:
 - clean up all the obsolete stuff in the scene (and remember to check functionality often in order to not break things)
 - list of useful links (add them to your bookmarks)
 - use TextMesh Pro for improved text quality (free)
@@ -13,7 +13,7 @@ Tutourials:
   - going from unspecific descriptions to better information like "the girl I mat at place x with the weird hair" => to "Marissa Jones" after I learned her name
   - it may be possible to have descriptions of several people like "the guy who stole the golden apple" and "Shady Tom" and link them together (because Shady Tom stole the golden apple)
   - this could become a game mechanic in itself => automatic linking of information is difficult
-  - question: how and when does the player know that he made the rght deductions (immediately is probably boring) => Obra dinn fies this with a "correction count" maybe a "truth percentage" that has to increase to 100%? Then I could upgrade it dynamically
+  - question: how and when does the player know that he made the right deductions (immediately is probably boring) => Obra dinn files this with a "correction count" maybe a "truth percentage" that has to increase to 100%? Then I could upgrade it dynamically
 - Cool text animations
 - More dialogue, triggered by more stuff
 - better dialogue animations
@@ -24,4 +24,10 @@ Tutourials:
 - add name and descriptions to items (objects) and so on
 - It should probably be possible to hack the outline of sprites with The SDF shader of TextMeshPro
 - Make a writeup on how TMPJuicer works. And how you integrated it with the UI Update adapter to reset the text and re-initialize the transforms and animation (remember the weird destroyed text)
-- - we could give different characters different tet speeds, character animations, sentence emphysis (delay between sentences in same line. To be implemented) - Test this. maybe it is cool
+- we could give different characters different tet speeds, character animations, sentence emphasis (delay between sentences in same line. To be implemented) - Test this. maybe it is cool
+
+## Fixes to know:
+
+If classes or namespaces are not recognized:
+
+https://answers.unity.com/questions/1697513/vs-code-does-not-find-some-classes-cs0246cs0103.html

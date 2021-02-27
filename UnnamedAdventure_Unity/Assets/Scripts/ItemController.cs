@@ -58,7 +58,7 @@ public class ItemController : MonoBehaviour
     void SetHighlighted(Boolean highlighted) {
         try {
             _outlineMaterial.SetInt("_Enabled", highlighted ? 1 : 0);
-        } catch( Exception e ) {}
+        } catch( Exception ) {}
     }
 
     void UpdateLabelPosition() {

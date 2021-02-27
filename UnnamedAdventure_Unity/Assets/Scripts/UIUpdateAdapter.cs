@@ -115,7 +115,7 @@ public class UIUpdateAdapter : MonoBehaviour
                 var npcWithMatchingName = NPCs.Find(npc => npc.Name == name);
                 SpeakerText.color = npcWithMatchingName.Color;
                 TextText.color = npcWithMatchingName.Color;
-            } catch(Exception e) {}
+            } catch( Exception ) {}
     
             onLineUpdate?.Invoke(text);
         }

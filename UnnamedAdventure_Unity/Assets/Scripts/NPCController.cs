@@ -61,7 +61,7 @@ public class NPCController : MonoBehaviour
         // the NPC might have a mesh renderr - if it does, this is a 3D NPC and we don't need to bother creating the outline
         try {
             CreateOutline();
-        } catch( Exception e ) {}
+        } catch( Exception ) {}
 
         if (scriptToLoad != null) {
             DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
@@ -87,7 +87,7 @@ public class NPCController : MonoBehaviour
             _dialogueRunner.StartDialogue (talkToNode);
             SetHighlighted(false);
             ShowName(false);
-        } catch( Exception e ) {
+        } catch( Exception ) {
             Debug.LogWarningFormat("Could not start dialogue on node {0}", talkToNode);
         }
     }
@@ -115,23 +115,23 @@ public class NPCController : MonoBehaviour
                 Material m = GetComponent<MeshRenderer>()?.material;
                 _stored = m.color;
                 m.color = new Color(1.0f, 0f, 0f);
-            } catch( MissingComponentException e ) {}
+            } catch( MissingComponentException ) {}
 
             try {
                 GameObject outline = transform.Find("_Outline").gameObject;
                 outline.SetActive(true);
-            } catch( NullReferenceException e ) {}
+            } catch( NullReferenceException ) {}
         }
         else {
             try {
             Material m = GetComponent<MeshRenderer>()?.material;
             m.color = _stored;
-            } catch(MissingComponentException e) {}
+            } catch( MissingComponentException ) {}
 
             try {
                 GameObject outline = transform.Find("_Outline").gameObject;
                 outline.SetActive(false);
-            } catch(NullReferenceException e) {}
+            } catch( NullReferenceException ) {}
         }
     }
 

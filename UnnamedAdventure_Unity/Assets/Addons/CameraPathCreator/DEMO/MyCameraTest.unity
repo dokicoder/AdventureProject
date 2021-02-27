@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useMainCamera: 1
   selectedCamera: {fileID: 0}
-  cameraDirectionMode: 1
+  cameraDirectionMode: 3
   target: {fileID: 467876390}
   playOnAwake: 1
   playOnAwakeTime: 20

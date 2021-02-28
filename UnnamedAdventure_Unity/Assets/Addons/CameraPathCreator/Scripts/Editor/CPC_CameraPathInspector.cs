@@ -58,6 +58,7 @@ public class CPC_CameraPathInspector : Editor
     private SerializedProperty useMainCameraProperty;
     private SerializedProperty selectedCameraProperty;
     private SerializedProperty cameraDirectionMode;
+    private SerializedProperty animationDirection;
     private SerializedProperty lookAtTargetTransformProperty;
     private SerializedProperty playOnAwakeProperty;
     private SerializedProperty playOnAwakeTimeProperty;
@@ -168,6 +169,7 @@ public class CPC_CameraPathInspector : Editor
         useMainCameraProperty = serializedObjectTarget.FindProperty("useMainCamera");
         selectedCameraProperty = serializedObjectTarget.FindProperty("selectedCamera");
         cameraDirectionMode = serializedObjectTarget.FindProperty("cameraDirectionMode");
+        animationDirection = serializedObjectTarget.FindProperty("animationDirection");
         lookAtTargetTransformProperty = serializedObjectTarget.FindProperty("target");
         visualPathProperty = serializedObjectTarget.FindProperty("visual.pathColor");
         visualInactivePathProperty = serializedObjectTarget.FindProperty("visual.inactivePathColor");
@@ -425,6 +427,11 @@ public class CPC_CameraPathInspector : Editor
         GUILayout.Label("Time: ", GUILayout.Width(Screen.width / 4f));
         playOnAwakeTimeProperty.floatValue = EditorGUILayout.FloatField(playOnAwakeTimeProperty.floatValue);
         GUI.enabled = true;
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Animation Direction:", GUILayout.Width(Screen.width / 3f));
+        animationDirection.intValue = (int) GUILayout.SelectionGrid(animationDirection.intValue, new string[] { "Forward", "Backward" }, 2);
         GUILayout.EndHorizontal();
     }
 

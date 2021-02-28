@@ -1,6 +1,7 @@
-* TODOs:
+- TODOs:
 
 ## Tutorials:
+
 - clean up all the obsolete stuff in the scene (and remember to check functionality often in order to not break things)
 - list of useful links (add them to your bookmarks)
 - use TextMesh Pro for improved text quality (free)
@@ -25,6 +26,7 @@
 - It should probably be possible to hack the outline of sprites with The SDF shader of TextMeshPro
 - Make a writeup on how TMPJuicer works. And how you integrated it with the UI Update adapter to reset the text and re-initialize the transforms and animation (remember the weird destroyed text)
 - we could give different characters different tet speeds, character animations, sentence emphasis (delay between sentences in same line. To be implemented) - Test this. maybe it is cool
+- - MainCamera component/layer mask: 'Do not use "Everything" or "Default" as Layer mask...' - fix this
 
 ## Fixes to know:
 

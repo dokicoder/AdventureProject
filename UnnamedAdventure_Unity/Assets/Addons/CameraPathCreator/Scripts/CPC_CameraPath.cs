@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,11 @@ public enum CPC_CameraDirectionMode:int {
     InterpolateDirection,
     FollowTangent,
     InterpolateDirectionWithCorrectedUpVector,
+}
+
+public enum CPC_AnimationDirection:int {
+    Forward,
+    Backward,
 }
 
 public enum CPC_EAfterLoop
@@ -68,9 +74,10 @@ public class CPC_CameraPath : MonoBehaviour
     public bool useMainCamera = true;
     public Camera selectedCamera;
     public CPC_CameraDirectionMode cameraDirectionMode = CPC_CameraDirectionMode.InterpolateDirection;
+    public CPC_AnimationDirection animationDirection = CPC_AnimationDirection.Forward;
     public Transform target;
     public bool playOnAwake = false;
-    public float playOnAwakeTime = 10;
+    public float playOnAwakeTime = 2;
     public List<CPC_Point> points = new List<CPC_Point>();
     public CPC_Visual visual;
     public bool looped = false;
@@ -120,6 +127,7 @@ public class CPC_CameraPath : MonoBehaviour
     /// <param name="time">The time in seconds how long the camera takes for the entire path</param>
     public void PlayPath(float time)
     {
+        // minimum playtime - TODO: I guess a min value for this property would be more transparent
         if (time <= 0) time = 0.001f;
         paused = false;
         playing = true;
@@ -246,19 +254,30 @@ public class CPC_CameraPath : MonoBehaviour
 
     IEnumerator FollowPath(float time)
     {
+        bool isForward = animationDirection == CPC_AnimationDirection.Forward;
+
+        Func<bool> hasPathEnded = () => isForward ?
+            currentWaypointIndex == points.Count - 1 :
+            currentWaypointIndex == 0;
+
+         Func<bool> hasSegmentEnded = () => currentTimeInWaypoint >= 1;
+
         UpdateTimeInSeconds(time);
-        currentWaypointIndex = 0;
-        while (currentWaypointIndex < points.Count)
+        currentWaypointIndex = isForward ? 0 : points.Count - 1;
+        currentTimeInWaypoint = 0;
+
+        while ( !hasPathEnded() )
         {
             // take over amount the step interpolation overshot instead of deleting it
             currentTimeInWaypoint = Mathf.Repeat(currentTimeInWaypoint, 1);
             //currentTimeInWaypoint = 0;
 
-            while (currentTimeInWaypoint < 1)
+            while ( !hasSegmentEnded() )
             {
                 if (!paused)
                 {
-                    currentTimeInWaypoint += Time.deltaTime / timePerSegment;
+                    float timeDelta = Time.deltaTime / timePerSegment;
+                    currentTimeInWaypoint += timeDelta;
 
                     // TODO: move variable declarations outside in case compiler is not optimizing for this (or proflie to check)
                     Vector3 camPos = GetBezierPosition(currentWaypointIndex, currentTimeInWaypoint);
@@ -277,9 +296,10 @@ public class CPC_CameraPath : MonoBehaviour
                 }
                 yield return 0;
             }
-            ++currentWaypointIndex;
-            if (currentWaypointIndex == points.Count - 1 && !looped) break;
-            if (currentWaypointIndex == points.Count && afterLoop == CPC_EAfterLoop.Continue) currentWaypointIndex = 0;
+            currentWaypointIndex += isForward ? 1 : -1;
+
+            if ( hasPathEnded() && !looped ) break;
+            if ( hasPathEnded() && afterLoop == CPC_EAfterLoop.Continue) currentWaypointIndex = isForward ? 0 : points.Count - 1;
         }
         StopPath();
     }

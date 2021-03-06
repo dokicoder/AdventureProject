@@ -1233,8 +1233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 1352648919}
-  rotationSpeed: 5
-  minDistance: 2
+  rotationSpeed: 2
+  minDistance: 1.4
   maxDistance: 10
 --- !u!1 &983439027
 GameObject:

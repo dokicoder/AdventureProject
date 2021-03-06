@@ -43,10 +43,19 @@ public class CameraRotator : MonoBehaviour
             lastOrientationVector = GetMouseDirectionVector(cam);
         }
 
+        float newCamDistance = (cam.transform.position - targetTransform.position).magnitude * (1 + -0.03f * Input.mouseScrollDelta.y);
+        newCamDistance = Mathf.Clamp(newCamDistance, minDistance, maxDistance);
+
+        cam.transform.position = targetTransform.position + ((cam.transform.position - targetTransform.position).normalized * newCamDistance);
+
         if ( Input.GetMouseButton(0) ) {
+            // orientation vector with updated mouse coordinates
             Vector3 currentOrientationVector = GetMouseDirectionVector(cam);
 
             Quaternion deltaRot = Quaternion.FromToRotation(lastOrientationVector, currentOrientationVector);
+
+            Vector3 recentRotation = cam.transform.rotation.eulerAngles;
+            Vector3 recentPosition = cam.transform.position;
 
             float angle = 0;
             Vector3 axis;
@@ -55,16 +64,28 @@ public class CameraRotator : MonoBehaviour
 
             // rotate the delta vector between camera and target, and add it to the target position: voila - the camera was rotated around the target
             cam.transform.position = targetTransform.position + deltaRot * (cam.transform.position - targetTransform.position);
-       
             cam.transform.LookAt(targetTransform.position, Vector3.up);
+            
+            if( Mathf.Abs( recentRotation.y - cam.transform.rotation.eulerAngles.y ) > 30f && Mathf.Abs( recentRotation.y - cam.transform.rotation.eulerAngles.y ) < 330f ) {
+                //Debug.Log("It flipped!");
+
+                // TODO: just resetting the rotation does not cut it - find out how to just correct the y rotation here
+                cam.transform.rotation = Quaternion.Euler(recentRotation);
+                cam.transform.position = recentPosition;
+
+                // TODO: this kinf od works, but also breaks down at the poles - find a better solution (also computationally expensive)
+                Vector3 rotAngles = deltaRot.eulerAngles;
+                rotAngles.x = 0;
+                rotAngles.y = -rotAngles.y;
+                rotAngles.z = 0;
+                deltaRot = Quaternion.Euler(rotAngles);
+                cam.transform.position = targetTransform.position + deltaRot * (cam.transform.position - targetTransform.position);
+                cam.transform.LookAt(targetTransform.position, Vector3.up);
+
+            }
 
             // we cannot reuse currentOrientationVector here since we rerotated and -oriented the camera. We have to calculate it again
             lastOrientationVector = GetMouseDirectionVector(cam);
         }
-
-        float newCamDistance = (cam.transform.position - targetTransform.position).magnitude * (1 + -0.03f * Input.mouseScrollDelta.y);
-        newCamDistance = Mathf.Clamp(newCamDistance, minDistance, maxDistance);
-
-        cam.transform.position = targetTransform.position + ((cam.transform.position - targetTransform.position).normalized * newCamDistance);
     }
 }

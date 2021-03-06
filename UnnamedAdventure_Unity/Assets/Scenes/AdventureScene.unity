@@ -1227,11 +1227,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8532e899cfe843d4bbd1afc4172ed3c8, type: 3}
+  m_Script: {fileID: 11500000, guid: f5f44c793c2aa6648a54de20fb5b3f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTransform: {fileID: 1352648919}
+  rotationSpeed: 5
+  minDistance: 2
+  maxDistance: 10
 --- !u!1 &983439027
 GameObject:
   m_ObjectHideFlags: 0
@@ -2290,6 +2294,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 188a32f0fc7ae2c4487216afe2d18fe0, type: 3}
   m_PrefabInstance: {fileID: 1006440985}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1352648919 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 188a32f0fc7ae2c4487216afe2d18fe0, type: 3}
+  m_PrefabInstance: {fileID: 1006440985}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1352648920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2643,9 +2652,10 @@ MonoBehaviour:
   useMainCamera: 1
   selectedCamera: {fileID: 0}
   cameraDirectionMode: 1
+  animationDirection: 0
   target: {fileID: 0}
   playOnAwake: 1
-  playOnAwakeTime: 20
+  playOnAwakeTime: 2
   points:
   - position: {x: 3.5, y: 18.1, z: -10}
     rotation: {x: 0, y: 0, z: 0, w: 1}

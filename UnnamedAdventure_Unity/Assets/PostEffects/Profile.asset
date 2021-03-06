@@ -19,6 +19,32 @@ MonoBehaviour:
   blend:
     overrideState: 0
     value: 0.5
+--- !u!114 &-4134268479884592657
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Grayscale
+  m_EditorClassIdentifier: Assembly-CSharp::Grayscale
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  gamma:
+    overrideState: 1
+    value: 1.49
+  noiseScaling:
+    overrideState: 1
+    value: 2.46
+  noise:
+    overrideState: 1
+    value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}
+    defaultState: 1
 --- !u!114 &-1911850444124267628
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -55,7 +81,59 @@ MonoBehaviour:
   m_Name: Profile
   m_EditorClassIdentifier: 
   settings:
-  - {fileID: 5229464191670218922}
+  - {fileID: -4134268479884592657}
+--- !u!114 &670752436270655076
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Grayscale
+  m_EditorClassIdentifier: Assembly-CSharp::Grayscale
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  gamma:
+    overrideState: 1
+    value: 1.43
+  noiseScaling:
+    overrideState: 1
+    value: 2.62
+  noise:
+    overrideState: 1
+    value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}
+    defaultState: 1
+--- !u!114 &1600829102935951106
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Grayscale
+  m_EditorClassIdentifier: Assembly-CSharp::Grayscale
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  gamma:
+    overrideState: 1
+    value: 1.11
+  noiseScaling:
+    overrideState: 1
+    value: 2.63
+  noise:
+    overrideState: 1
+    value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}
+    defaultState: 1
 --- !u!114 &5229464191670218922
 MonoBehaviour:
   m_ObjectHideFlags: 3

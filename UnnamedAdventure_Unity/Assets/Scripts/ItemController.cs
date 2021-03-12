@@ -8,24 +8,34 @@ public class ItemController : MonoBehaviour
     public string Name = "";
     public Color Color;
     public Vector3 TopOffset = new Vector3(0, 30, 0);
-    private Material _outlineMaterial;
     private GameObject _nameLabel;
-    private Renderer _renderer;
     private DialogueRunner _dialogueRunner;
 
     private Boolean _hovered = false;
 
+    private MeshOutline meshOutline;
+    private MeshOutline Outline
+    {
+        get
+        {
+            if (meshOutline == null)
+            {
+                meshOutline = GetComponent<MeshOutline>();
+                if (meshOutline == null)
+                    meshOutline = GetComponentInChildren<MeshOutline>();
+            }
+            return meshOutline;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Outline.Color = Color;
+
         _dialogueRunner = FindObjectOfType<DialogueRunner>();
 
-        _renderer = GetComponentInChildren<Renderer>();
-
         _nameLabel = GameObject.FindWithTag("NameLabel");
-        _outlineMaterial = _renderer?.material; 
-
-        _outlineMaterial.SetColor("_OutlineColor", Color);      
 
         SetHighlighted(false);
     }
@@ -56,14 +66,14 @@ public class ItemController : MonoBehaviour
     }
 
     void SetHighlighted(Boolean highlighted) {
-        try {
-            _outlineMaterial.SetInt("_Enabled", highlighted ? 1 : 0);
-        } catch( Exception ) {}
+        Outline.Enabled = highlighted;
     }
 
     void UpdateLabelPosition() {
+        var renderer = Outline.GetComponent<Renderer>();
+
         // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
-        float halfBoundsHeight = _renderer.bounds.size.y * _renderer.transform.lossyScale.y * 0.5f;
+        float halfBoundsHeight = renderer.bounds.size.y * renderer.transform.lossyScale.y * 0.5f;
 
         Vector3 meshTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfBoundsHeight, 0));
         _nameLabel.GetComponent<RectTransform>().position = meshTopScreenPosition + TopOffset;

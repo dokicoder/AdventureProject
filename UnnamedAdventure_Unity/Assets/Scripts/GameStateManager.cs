@@ -16,29 +16,29 @@ public class GameStateManager : MonoBehaviour
     [SerializeField]
     private GameState state;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     public GameObject debugUIPrefab;
 
     private GameObject debugUI;
 
-    #endif
+#endif
 
     void Start() 
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             debugUI = Instantiate(debugUIPrefab);
 
             debugUI.transform.SetParent( GameObject.Find("Canvas").transform );
             debugUI.transform.position = new Vector3(20, Screen.height -20, 0);
-        #endif
+#endif
 
         state = GameState.Overview;
     }
 
     void Update() {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             debugUI.transform.Find("Mode").GetComponent<TextMeshProUGUI>().text = string.Format("Mode: {0}", state);
-        #endif
+#endif
     }
 
     void EnableSelectionMode() 

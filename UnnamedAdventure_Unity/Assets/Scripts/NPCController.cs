@@ -17,8 +17,6 @@ public class NPCController : MonoBehaviour
 
     public string Name = "";
     public string talkToNode = "";
-    
-    private Color _stored;
 
     [SerializeField]
     private SpriteOutline spriteOutline;

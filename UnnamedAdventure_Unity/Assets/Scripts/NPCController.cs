@@ -5,6 +5,7 @@ using UnityEngine;
 using Yarn.Unity;
 using TMPro;
 
+[DisallowMultipleComponent]
 public class NPCController : MonoBehaviour
 {
     [Header("Optional")]
@@ -19,49 +20,35 @@ public class NPCController : MonoBehaviour
     
     private Color _stored;
 
+    [SerializeField]
+    private SpriteOutline spriteOutline;
+    private SpriteOutline Outline
+    {
+        get
+        {
+            if (spriteOutline == null)
+            {
+                spriteOutline = GetComponent<SpriteOutline>();
+                if (spriteOutline == null)
+                    spriteOutline = GetComponentInChildren<SpriteOutline>();
+            }
+            return spriteOutline;
+        }
+    }
+
     private DialogueRunner _dialogueRunner;
     private GameObject _nameLabel;
 
     private Boolean _hovered = false;
 
-    void CreateOutline() {
-        GameObject outline = new GameObject("_Outline");
-
-        outline.transform.parent = transform;
-        outline.transform.localPosition = Vector3.zero;
-        outline.SetActive(false);
-
-        Material outlineMaterial = new Material( Shader.Find("Sprites/OutlineShader") );
-        outlineMaterial.SetColor("_OutlineColor", Color);
-
-        const int num_outlines = 7;
-        float angle = 0;
-        for( int i = 0; i < num_outlines; ++i ) {
-            GameObject outlinePart = new GameObject("_OutlinePart");
-            outlinePart.AddComponent<RectTransform>();
-            var spriteRenderer = outlinePart.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = GetComponent<SpriteRenderer>().sprite;
-            spriteRenderer.material = outlineMaterial;
-            outlinePart.transform.parent =  outline.transform;
-            outlinePart.transform.localScale = transform.localScale;
-            outlinePart.transform.localPosition = new Vector3(Mathf.Cos(angle) * 0.01f, -Mathf.Sin(angle) * 0.01f, 0);
-
-            angle += 2 * Mathf.PI / num_outlines;
-        }
-
-    }
-
     // Start is called before the first frame update
     void Start()
     {
+        Outline.Color = Color;
+
         // TODO: for this, canvas and label need to be active on startup. Not sure if this is good
         _nameLabel = GameObject.FindWithTag("NameLabel");
         _dialogueRunner = FindObjectOfType<DialogueRunner>();
-        
-        // the NPC might have a mesh renderr - if it does, this is a 3D NPC and we don't need to bother creating the outline
-        try {
-            CreateOutline();
-        } catch( Exception ) {}
 
         if (scriptToLoad != null) {
             DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
@@ -110,34 +97,12 @@ public class NPCController : MonoBehaviour
     }
 
     void SetHighlighted(Boolean highlighted) {
-        if(highlighted) {
-            try {
-                Material m = GetComponent<MeshRenderer>()?.material;
-                _stored = m.color;
-                m.color = new Color(1.0f, 0f, 0f);
-            } catch( MissingComponentException ) {}
-
-            try {
-                GameObject outline = transform.Find("_Outline").gameObject;
-                outline.SetActive(true);
-            } catch( NullReferenceException ) {}
-        }
-        else {
-            try {
-            Material m = GetComponent<MeshRenderer>()?.material;
-            m.color = _stored;
-            } catch( MissingComponentException ) {}
-
-            try {
-                GameObject outline = transform.Find("_Outline").gameObject;
-                outline.SetActive(false);
-            } catch( NullReferenceException ) {}
-        }
+        Outline.Enabled = highlighted;
     }
 
     void UpdateLabelPosition() {
          // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
-        float halfSpriteHeight = GetComponent<SpriteRenderer>().sprite.bounds.size.y * transform.localScale.y * 0.5f;
+        float halfSpriteHeight = Outline.GetComponent<SpriteRenderer>().sprite.bounds.size.y * transform.localScale.y * 0.5f;
 
         Vector3 spriteTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfSpriteHeight, 0));
         _nameLabel.GetComponent<RectTransform>().position = spriteTopScreenPosition + TopOffset;

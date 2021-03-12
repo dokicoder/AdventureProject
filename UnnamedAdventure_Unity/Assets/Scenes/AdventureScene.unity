@@ -1201,7 +1201,7 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles:
-  - assemblyQualifiedName: Grayscale, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+  - assemblyQualifiedName: Dither, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
 --- !u!114 &963194231
 MonoBehaviour:
@@ -1227,7 +1227,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5f44c793c2aa6648a54de20fb5b3f6a, type: 3}
   m_Name: 
@@ -1249,6 +1249,7 @@ GameObject:
   - component: {fileID: 983439030}
   - component: {fileID: 983439031}
   - component: {fileID: 983439032}
+  - component: {fileID: 983439033}
   m_Layer: 0
   m_Name: Gumshoe
   m_TagString: Untagged
@@ -1575,6 +1576,65 @@ MonoBehaviour:
   Color: {r: 0.5777284, g: 0.9622642, b: 0.38581347, a: 1}
   Name: Gumshoe
   talkToNode: FillMeIn
+  spriteOutline: {fileID: 0}
+--- !u!114 &983439033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983439027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b28e1c9d46e264c95b902dad90e58f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Size: 0.014
+--- !u!1 &996178108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 996178109}
+  - component: {fileID: 996178110}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &996178109
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996178108}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 582.37177, y: 376.1545, z: -75.21377}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &996178110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996178108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c08555bd69662a459699154955ec528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  debugUIPrefab: {fileID: 5952662441490229401, guid: 907147fc0a926764c9324c612f8a3b30, type: 3}
 --- !u!1001 &1006440985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2654,7 +2714,7 @@ MonoBehaviour:
   cameraDirectionMode: 1
   animationDirection: 0
   target: {fileID: 0}
-  playOnAwake: 1
+  playOnAwake: 0
   playOnAwakeTime: 2
   points:
   - position: {x: 3.5, y: 18.1, z: -10}

@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Name: Profile
   m_EditorClassIdentifier: 
   settings:
-  - {fileID: -4134268479884592657}
+  - {fileID: 1018263825885073087}
 --- !u!114 &670752436270655076
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -104,6 +104,32 @@ MonoBehaviour:
   noiseScaling:
     overrideState: 1
     value: 2.62
+  noise:
+    overrideState: 1
+    value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}
+    defaultState: 1
+--- !u!114 &1018263825885073087
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb61c41586448d84da83dd0fedc6bad8, type: 3}
+  m_Name: Dither
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  gamma:
+    overrideState: 1
+    value: 1.55
+  noiseScaling:
+    overrideState: 1
+    value: 2.51
   noise:
     overrideState: 1
     value: {fileID: 2800000, guid: 99f502ebb53bab0428f00a4505111e09, type: 3}

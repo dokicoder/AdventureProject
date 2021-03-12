@@ -26,11 +26,13 @@ public class CameraRotator : MonoBehaviour
 
     void OnDrawGizmos()
 	{
-        Gizmos.color = Color.red;
+        if ( Input.GetMouseButton(0) ) {
+            Gizmos.color = Color.red;
 
-		Gizmos.DrawLine(targetTransform.position, targetTransform.position + lastOrientationVector);
-        Gizmos.DrawSphere(targetTransform.position, 0.03f);
-        Gizmos.DrawSphere(targetTransform.position + lastOrientationVector, 0.03f);
+            Gizmos.DrawLine(targetTransform.position, targetTransform.position + lastOrientationVector);
+            Gizmos.DrawSphere(targetTransform.position, 0.03f);
+            Gizmos.DrawSphere(targetTransform.position + lastOrientationVector, 0.03f);
+        }
 	}
 
     // Update is called once per frame

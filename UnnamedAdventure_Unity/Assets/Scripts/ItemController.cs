@@ -8,11 +8,10 @@ public class ItemController : MonoBehaviour
     public string Name = "";
     public Color Color;
     public Vector3 TopOffset = new Vector3(0, 30, 0);
-    private GameObject _nameLabel;
     private DialogueRunner _dialogueRunner;
 
     private Boolean _hovered = false;
-
+    [SerializeField]
     private MeshOutline meshOutline;
     private MeshOutline Outline
     {
@@ -28,15 +27,25 @@ public class ItemController : MonoBehaviour
         }
     }
 
+    private SelectionLabelController labelController;
+    private SelectionLabelController LabelController
+    {
+        get
+        {
+            if (labelController == null)
+            {
+                labelController = GameObject.FindWithTag("GameController").GetComponent<SelectionLabelController>();
+            }
+            return labelController;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        Outline.Color = Color;
-
         _dialogueRunner = FindObjectOfType<DialogueRunner>();
 
-        _nameLabel = GameObject.FindWithTag("NameLabel");
-
+        Outline.Color = Color;
         SetHighlighted(false);
     }
 
@@ -51,8 +60,9 @@ public class ItemController : MonoBehaviour
         if (_dialogueRunner.IsDialogueRunning == true) {
             return;
         }
-
         _hovered = true;
+
+        LabelController.RequestOwnership(gameObject);
 
         SetHighlighted(true);
         ShowName(true);
@@ -60,6 +70,8 @@ public class ItemController : MonoBehaviour
 
     void OnMouseExit() {
         _hovered = false;
+
+        LabelController.SubmitOwnership(gameObject);
 
         SetHighlighted(false);
         ShowName(false);
@@ -71,24 +83,17 @@ public class ItemController : MonoBehaviour
 
     void UpdateLabelPosition() {
         var renderer = Outline.GetComponent<Renderer>();
+        Vector3 updatedPos = SelectionLabelController.CalculateLabelScreenPosition(renderer, TopOffset);
 
-        // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
-        float halfBoundsHeight = renderer.bounds.size.y * renderer.transform.lossyScale.y * 0.5f;
-
-        Vector3 meshTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfBoundsHeight, 0));
-        _nameLabel.GetComponent<RectTransform>().position = meshTopScreenPosition + TopOffset;
+        LabelController.UpdateLabelPosition(gameObject, updatedPos);
     }
 
-     void ShowName(Boolean show) {
+    void ShowName(Boolean show) {
         if(show) {
-            _nameLabel.SetActive(true);
-
-            UpdateLabelPosition();
-
-            _nameLabel.GetComponent<TextMeshProUGUI>().color = Color;
-            _nameLabel.GetComponent<TextMeshProUGUI>().text = Name;
+            LabelController.UpdateLabelVisibility(gameObject, true);
+            LabelController.UpdateLabelText(gameObject, Name, Color);
         } else {
-            _nameLabel.SetActive(false);
+            LabelController.UpdateLabelVisibility(gameObject, false);
         }
     }
 }

@@ -16,18 +16,18 @@ public class MeshOutline : MonoBehaviour
         get { return size; }
         set {
           size = value;
-          OutlineRenderer.material.SetFloat( "_OutlineAmount", value ); 
+          OutlineRenderer.sharedMaterial.SetFloat( "_OutlineAmount", value ); 
         }
     }
 
     public bool Enabled {
-      get { return OutlineRenderer.material.GetInt("_Enabled") == 1; }
-      set {  OutlineRenderer.material.SetInt( "_Enabled", value ? 1 : 0 ); }
+        get { return OutlineRenderer.sharedMaterial.GetInt("_Enabled") == 1; }
+        set {  OutlineRenderer.sharedMaterial.SetInt( "_Enabled", value ? 1 : 0 ); }
     }
 
     public Color Color {
-      get { return OutlineRenderer.material.GetColor("_OutlineColor"); }
-      set {  OutlineRenderer.material.SetColor( "_OutlineColor", value ); }
+        get { return OutlineRenderer.sharedMaterial.GetColor("_OutlineColor"); }
+        set {  OutlineRenderer.sharedMaterial.SetColor( "_OutlineColor", value ); }
     }
 
     private Renderer outlineRenderer;
@@ -43,7 +43,7 @@ public class MeshOutline : MonoBehaviour
         }
     }
     private void OnValidate()
-{
-    Size = size;
-}
+    {
+        Size = size;
+    }
 }

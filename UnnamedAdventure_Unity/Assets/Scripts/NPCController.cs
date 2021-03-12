@@ -35,24 +35,32 @@ public class NPCController : MonoBehaviour
     }
 
     private DialogueRunner _dialogueRunner;
-    private GameObject _nameLabel;
-
     private Boolean _hovered = false;
+
+    private SelectionLabelController labelController;
+    private SelectionLabelController LabelController
+    {
+        get
+        {
+            if (labelController == null)
+            {
+                labelController = GameObject.FindWithTag("GameController").GetComponent<SelectionLabelController>();
+            }
+            return labelController;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         Outline.Color = Color;
 
-        // TODO: for this, canvas and label need to be active on startup. Not sure if this is good
-        _nameLabel = GameObject.FindWithTag("NameLabel");
         _dialogueRunner = FindObjectOfType<DialogueRunner>();
 
         if (scriptToLoad != null) {
             DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
             dialogueRunner.Add(scriptToLoad);                
         }
-
     }
 
     void Update() {
@@ -80,8 +88,9 @@ public class NPCController : MonoBehaviour
         if (_dialogueRunner?.IsDialogueRunning == true) {
             return;
         }
-
         _hovered = true;
+
+        LabelController.RequestOwnership(gameObject);
 
         SetHighlighted(true);
         ShowName(true);
@@ -89,6 +98,8 @@ public class NPCController : MonoBehaviour
 
     void OnMouseExit() {
         _hovered = false;
+
+        LabelController.SubmitOwnership(gameObject);
 
         SetHighlighted(false);
         ShowName(false);
@@ -99,23 +110,18 @@ public class NPCController : MonoBehaviour
     }
 
     void UpdateLabelPosition() {
-         // TODO: using localScale here is probably not strictly correct. I don't see a reason for nested scaling though so it should suffice
-        float halfSpriteHeight = Outline.GetComponent<SpriteRenderer>().sprite.bounds.size.y * transform.localScale.y * 0.5f;
+        var renderer = Outline.GetComponent<SpriteRenderer>();
+        Vector3 updatedPos = SelectionLabelController.CalculateLabelScreenPosition(renderer, TopOffset);
 
-        Vector3 spriteTopScreenPosition = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, halfSpriteHeight, 0));
-        _nameLabel.GetComponent<RectTransform>().position = spriteTopScreenPosition + TopOffset;
+        LabelController.UpdateLabelPosition(gameObject, updatedPos);
     }
 
     void ShowName(Boolean show) {
         if(show) {
-            _nameLabel.SetActive(true);
-
-            UpdateLabelPosition();
-
-            _nameLabel.GetComponent<TextMeshProUGUI>().color = Color;
-            _nameLabel.GetComponent<TextMeshProUGUI>().text = Name;
+            LabelController.UpdateLabelVisibility(gameObject, true);
+            LabelController.UpdateLabelText(gameObject, Name, Color);
         } else {
-            _nameLabel.SetActive(false);
+            LabelController.UpdateLabelVisibility(gameObject, false);
         }
     }
 }

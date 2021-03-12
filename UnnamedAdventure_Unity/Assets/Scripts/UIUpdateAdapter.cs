@@ -44,7 +44,6 @@ public class UIUpdateAdapter : MonoBehaviour
     }
 
     private void LineDisplayEnded() {
-        Debug.LogWarning("onLineDisplayEnded");
         _onLineDisplayEndedInvoked = true;
         onLineCompleted?.Invoke();
     }

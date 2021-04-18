@@ -1656,6 +1656,13 @@ MonoBehaviour:
   Color: {r: 0.5777284, g: 0.9622642, b: 0.38581347, a: 1}
   Name: Gumshoe
   talkToNode: FillMeIn
+  Selectable: 1
+  onRegisterDialogue:
+    m_PersistentCalls:
+      m_Calls: []
+  onStartDialogue:
+    m_PersistentCalls:
+      m_Calls: []
   spriteOutline: {fileID: 0}
 --- !u!114 &983439033
 MonoBehaviour:
@@ -2572,6 +2579,7 @@ MonoBehaviour:
   Name: Victim
   Color: {r: 1, g: 0.1462264, b: 0.7658078, a: 1}
   TopOffset: {x: 0, y: -10, z: 0}
+  meshOutline: {fileID: 0}
 --- !u!135 &1352648921
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3932,7 +3940,7 @@ GameObject:
   - component: {fileID: 5935829475375017870}
   m_Layer: 0
   m_Name: Dialogue Runner
-  m_TagString: Untagged
+  m_TagString: DialogueMain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4224,9 +4232,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onLineFinished:
-    m_PersistentCalls:
-      m_Calls: []
   SpeakerText: {fileID: 1709230396}
   TextText: {fileID: 1127924100}
   onNextLineRequested:

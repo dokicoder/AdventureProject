@@ -18,6 +18,11 @@ public class NPCController : MonoBehaviour
     public string Name = "";
     public string talkToNode = "";
 
+    public bool Selectable = true;
+
+    public UnityEngine.Events.UnityEvent<YarnProgram> onRegisterDialogue;
+    public UnityEngine.Events.UnityEvent<string> onStartDialogue;
+
     [SerializeField]
     private SpriteOutline spriteOutline;
     private SpriteOutline Outline
@@ -34,7 +39,6 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    private DialogueRunner _dialogueRunner;
     private Boolean _hovered = false;
 
     private SelectionLabelController labelController;
@@ -55,12 +59,7 @@ public class NPCController : MonoBehaviour
     {
         Outline.Color = Color;
 
-        _dialogueRunner = FindObjectOfType<DialogueRunner>();
-
-        if (scriptToLoad != null) {
-            DialogueRunner dialogueRunner = FindObjectOfType<DialogueRunner>();
-            dialogueRunner.Add(scriptToLoad);                
-        }
+        onRegisterDialogue?.Invoke(scriptToLoad);
     }
 
     void Update() {
@@ -70,24 +69,22 @@ public class NPCController : MonoBehaviour
     }
 
     void OnMouseDown() {
-        // Don't trigger when in dialog control when we're in dialogue
-        if (_dialogueRunner.IsDialogueRunning == true) {
+        // Don't trigger when in dialog control when non-selectable - e.g. when already in dialogue (controlled by GameStateManager)
+        if (!Selectable) {
+            return;
+        }
+        
+        // Kick off the dialogue at this node.
+        onStartDialogue?.Invoke(talkToNode);
+        SetHighlighted(false);
+        ShowName(false);
+    }
+    void OnMouseEnter() {
+        // Don't trigger when in dialog control when non-selectable - e.g. when already in dialogue (controlled by GameStateManager)
+        if (!Selectable) {
             return;
         }
 
-        try {
-            // Kick off the dialogue at this node.
-            _dialogueRunner.StartDialogue (talkToNode);
-            SetHighlighted(false);
-            ShowName(false);
-        } catch( Exception ) {
-            Debug.LogWarningFormat("Could not start dialogue on node {0}", talkToNode);
-        }
-    }
-    void OnMouseEnter() {
-        if (_dialogueRunner?.IsDialogueRunning == true) {
-            return;
-        }
         _hovered = true;
 
         LabelController.RequestOwnership(gameObject);
@@ -97,6 +94,11 @@ public class NPCController : MonoBehaviour
     }
 
     void OnMouseExit() {
+        // Don't trigger when in dialog control when non-selectable - e.g. when already in dialogue (controlled by GameStateManager)
+        if (!Selectable) {
+            return;
+        }
+
         _hovered = false;
 
         LabelController.SubmitOwnership(gameObject);

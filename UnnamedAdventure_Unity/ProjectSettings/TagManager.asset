@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - SelectionLabel
+  - DialogueMain
   layers:
   - Default
   - TransparentFX

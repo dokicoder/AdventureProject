@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace CPC_CAMERA_PATH {
+namespace CameraPath {
 
 public enum CPC_EManipulationModes
 {

@@ -10,13 +10,14 @@ using Yarn.Unity;
 using TMPro;
 using BrunoMikoski.TextJuicer;
 
+/**
+ * Adapter that lives between the Dialogue UI script (part of Yarn) and the UI elements. Wraps and handles certain events of dialogue
+ */
 public class UIUpdateAdapter : MonoBehaviour
 {
     public DialogueRunner.StringUnityEvent onLineUpdate;
 
     public DialogueRunner.StringUnityEvent onSpeakerUpdate;
-
-    public UnityEvent onLineFinished;
 
     // TODO: Dear Dev (aka me), your naming sucks balls. Regards, yourself from the future
     public TextMeshProUGUI SpeakerText;

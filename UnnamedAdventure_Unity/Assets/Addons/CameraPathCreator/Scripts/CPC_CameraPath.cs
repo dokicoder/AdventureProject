@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CPC_CAMERA_PATH {
+namespace CameraPath {
 
 [System.Serializable]
 public class CPC_Visual

@@ -1,14 +1,7 @@
-- TODOs:
+## TODOs:
 
-## Tutorials:
-
-- clean up all the obsolete stuff in the scene (and remember to check functionality often in order to not break things)
 - list of useful links (add them to your bookmarks)
-- use TextMesh Pro for improved text quality (free)
-- animate text using TMP Text Juicer https://github.com/brunomikoski/TMP-Text-Juicer.git (as a sub module)
-- camera: hone in on selected characters and items, maybe use hermite spline
-- make objects rotatable (that should work best for touch screen)
-- Use TextMeshPro instead of Text
+- fix rotatablility near the poles (go through math again - there needs to be a simple way to implement this)
 - select text and information on objects
 - make interactive journal that fills in blanks with information
   - going from unspecific descriptions to better information like "the girl I mat at place x with the weird hair" => to "Marissa Jones" after I learned her name
@@ -27,6 +20,9 @@
 - Make a writeup on how TMPJuicer works. And how you integrated it with the UI Update adapter to reset the text and re-initialize the transforms and animation (remember the weird destroyed text)
 - we could give different characters different tet speeds, character animations, sentence emphasis (delay between sentences in same line. To be implemented) - Test this. maybe it is cool
 - - MainCamera component/layer mask: 'Do not use "Everything" or "Default" as Layer mask...' - fix this
+
+- Currently, NPCController and ItemController know about SelectionLabelController and The Outliners. Maybe they should just trigger events that are connected via GameController
+- GameStateManager only manages NPCs as a proof of concept. Make it manage items as well.
 
 ## Fixes to know:
 

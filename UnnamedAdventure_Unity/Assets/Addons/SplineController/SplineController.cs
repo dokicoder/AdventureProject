@@ -204,11 +204,6 @@ public class SplineController : MonoBehaviour
 			return a.name.CompareTo(b.name);
 		});
 		
-		
-		foreach(var el in transforms ) {
-			Debug.Log(el.name);
-		}
-
 		// F. Montorsi modification: look for SplineNodeProperties objects
 		// attached to the spline nodes found so far...
 		List<SplineNode> info = new List<SplineNode>();
